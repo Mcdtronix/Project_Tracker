@@ -25,13 +25,13 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = [
-            'id', 'name', 'description', 'owner', 'team_members', 
+            'id', 'name', 'description', 
             'category', 'category_id', 'status', 'priority', 
             'start_date', 'end_date', 'estimated_completion_date', 
             'budget', 'current_spend', 'created_at', 'updated_at', 
             'progress', 'is_overdue'
         ]
-        read_only_fields = ['owner', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
 
     def get_progress(self, obj):
         return obj.calculate_progress()

@@ -8,6 +8,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     """
     Comprehensive Task ViewSet with advanced filtering
     """
+    queryset = Task.objects.all().select_related('project')
     serializer_class = TaskSerializer
     permission_classes = [permissions.AllowAny,]
     filter_backends = [
@@ -17,17 +18,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     ]
     
     # Filtering options
-    filterset_fields = ['status', 'priority', 'project', 'assigned_to']
+    filterset_fields = ['status', 'priority', 'project']
     search_fields = ['title', 'description']
     ordering_fields = ['created_at', 'due_date', 'priority']
-
-    def get_queryset(self):
-        """
-        Filter tasks to show only related projects
-        """
-        return Task.objects.filter(
-            project__owner=self.request.user
-        ).select_related('project', 'assigned_to', 'created_by')
 
     def perform_create(self, serializer):
         """

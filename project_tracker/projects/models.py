@@ -1,6 +1,5 @@
 # projects/models.py
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 class ProjectCategory(models.Model):
@@ -37,9 +36,7 @@ class Project(models.Model):
     description = models.TextField(blank=True, null=True)
     
     # Relationships
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_projects')
     category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True, blank=True)
-    team_members = models.ManyToManyField(User, related_name='projects', blank=True)
 
     # Project Metadata
     status = models.CharField(
@@ -87,6 +84,3 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        permissions = [
-            ("view_project_details", "Can view detailed project information"),
-            ("manage_project_team", "Can manage project team members"),]

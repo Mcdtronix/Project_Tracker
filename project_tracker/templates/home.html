@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Project Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Welcome to Project Tracker</h1>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-project-diagram"></i> Projects</h5>
+                            <p class="card-text">Manage your projects efficiently with our comprehensive tracking system.</p>
+                            <a href="/projects" class="btn btn-primary">View Projects</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-tasks"></i> Tasks</h5>
+                            <p class="card-text">Keep track of all your tasks and their progress in one place.</p>
+                            <a href="/tasks" class="btn btn-primary">View Tasks</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-chart-bar"></i> Reports</h5>
+                            <p class="card-text">Get detailed insights and analytics about your projects and tasks.</p>
+                            <a href="/reports" class="btn btn-primary">View Reports</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

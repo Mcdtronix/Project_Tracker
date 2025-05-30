@@ -1,6 +1,5 @@
 # tasks/models.py
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from projects.models import Project
 
@@ -29,19 +28,6 @@ class Task(models.Model):
         Project, 
         on_delete=models.CASCADE, 
         related_name='tasks'
-    )
-    assigned_to = models.ForeignKey(
-        User, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        related_name='assigned_tasks'
-    )
-    created_by = models.ForeignKey(
-        User, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        related_name='created_tasks'
     )
 
     # Task Metadata
@@ -92,8 +78,4 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        permissions = [
-            ("view_task_details", "Can view detailed task information"),
-            ("reassign_task", "Can reassign tasks to different users"),
-        ]
 
