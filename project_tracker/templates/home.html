@@ -3,40 +3,879 @@
 {% block title %}Home - Project Tracker{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4">Welcome to Project Tracker</h1>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-project-diagram"></i> Projects</h5>
-                            <p class="card-text">Manage your projects efficiently with our comprehensive tracking system.</p>
-                            <a href="/projects" class="btn btn-primary">View Projects</a>
+<!-- Hero Section -->
+<section class="hero-section mb-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold text-gradient mb-4">
+                        Manage Projects Like a Pro
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Streamline your project management with our comprehensive tracking system. 
+                        From planning to completion, we've got you covered.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="/projects" class="btn btn-primary btn-lg me-3 mb-2">
+                            <i class="fas fa-rocket me-2"></i>Get Started
+                        </a>
+                        <a href="#features" class="btn btn-outline-secondary btn-lg mb-2">
+                            <i class="fas fa-play me-2"></i>Watch Demo
+                        </a>
+                    </div>
+                    <div class="hero-stats mt-4">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <h3 class="text-primary fw-bold">500+</h3>
+                                    <small class="text-muted">Projects</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <h3 class="text-success fw-bold">2K+</h3>
+                                    <small class="text-muted">Tasks</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <h3 class="text-info fw-bold">98%</h3>
+                                    <small class="text-muted">Success Rate</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-tasks"></i> Tasks</h5>
-                            <p class="card-text">Keep track of all your tasks and their progress in one place.</p>
-                            <a href="/tasks" class="btn btn-primary">View Tasks</a>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="hero-visual">
+                    <div class="dashboard-preview">
+                        <div class="preview-header">
+                            <div class="preview-dots">
+                                <span class="dot bg-danger"></span>
+                                <span class="dot bg-warning"></span>
+                                <span class="dot bg-success"></span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-chart-bar"></i> Reports</h5>
-                            <p class="card-text">Get detailed insights and analytics about your projects and tasks.</p>
-                            <a href="/reports" class="btn btn-primary">View Reports</a>
+                        <div class="preview-content">
+                            <div class="preview-card">
+                                <div class="preview-bar" style="width: 75%"></div>
+                            </div>
+                            <div class="preview-card">
+                                <div class="preview-bar" style="width: 45%"></div>
+                            </div>
+                            <div class="preview-card">
+                                <div class="preview-bar" style="width: 90%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
+
+<!-- Quick Actions Section -->
+<section class="quick-actions mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="section-title text-center mb-5">
+                    <i class="fas fa-bolt text-warning me-2"></i>
+                    Quick Actions
+                </h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-body text-center p-4">
+                        <div class="action-icon mb-3">
+                            <i class="fas fa-plus-circle text-primary"></i>
+                        </div>
+                        <h5 class="card-title">New Project</h5>
+                        <p class="card-text text-muted">Create a new project and start tracking progress</p>
+                        <button class="btn btn-primary w-100" onclick="showQuickModal('project')">
+                            <i class="fas fa-plus me-2"></i>Create Project
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body text-center p-4">
+                        <div class="action-icon mb-3">
+                            <i class="fas fa-tasks text-success"></i>
+                        </div>
+                        <h5 class="card-title">Add Task</h5>
+                        <p class="card-text text-muted">Create a new task and assign it to a project</p>
+                        <button class="btn btn-success w-100" onclick="showQuickModal('task')">
+                            <i class="fas fa-plus me-2"></i>Add Task
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card-body text-center p-4">
+                        <div class="action-icon mb-3">
+                            <i class="fas fa-chart-line text-info"></i>
+                        </div>
+                        <h5 class="card-title">View Reports</h5>
+                        <p class="card-text text-muted">Get insights and analytics about your projects</p>
+                        <a href="/reports" class="btn btn-info w-100">
+                            <i class="fas fa-chart-bar me-2"></i>View Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card-body text-center p-4">
+                        <div class="action-icon mb-3">
+                            <i class="fas fa-calendar-alt text-warning"></i>
+                        </div>
+                        <h5 class="card-title">Calendar</h5>
+                        <p class="card-text text-muted">View your project timeline and deadlines</p>
+                        <a href="/calendar" class="btn btn-warning w-100">
+                            <i class="fas fa-calendar me-2"></i>Open Calendar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="section-title text-center mb-5">
+                    <i class="fas fa-star text-warning me-2"></i>
+                    Key Features
+                </h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card card h-100" data-aos="fade-right" data-aos-delay="100">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-project-diagram text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Project Management</h5>
+                        <p class="card-text">Comprehensive project tracking with status updates, priority levels, and progress monitoring.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check text-success me-2"></i>Status tracking</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Priority management</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Budget tracking</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card card h-100" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-tasks text-success"></i>
+                        </div>
+                        <h5 class="card-title">Task Management</h5>
+                        <p class="card-text">Efficient task organization with time tracking, due dates, and completion status.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check text-success me-2"></i>Time tracking</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Due date management</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Progress monitoring</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card card h-100" data-aos="fade-left" data-aos-delay="300">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-chart-bar text-info"></i>
+                        </div>
+                        <h5 class="card-title">Analytics & Reports</h5>
+                        <p class="card-text">Detailed insights and analytics to help you make informed decisions.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check text-success me-2"></i>Progress reports</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Performance metrics</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Custom dashboards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Activity Section -->
+<section class="recent-activity mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="section-title text-center mb-5">
+                    <i class="fas fa-clock text-primary me-2"></i>
+                    Recent Activity
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Latest Updates</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="activity-timeline">
+                            <div class="activity-item">
+                                <div class="activity-icon bg-success">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6>Project "Website Redesign" completed</h6>
+                                    <p class="text-muted mb-1">All tasks finished ahead of schedule</p>
+                                    <small class="text-muted">2 hours ago</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon bg-warning">
+                                    <i class="fas fa-exclamation"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6>Task "Database Migration" is overdue</h6>
+                                    <p class="text-muted mb-1">Due date was yesterday</p>
+                                    <small class="text-muted">5 hours ago</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon bg-info">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6>New project "Mobile App" created</h6>
+                                    <p class="text-muted mb-1">Project assigned to Development Team</p>
+                                    <small class="text-muted">1 day ago</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon bg-primary">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6>Team member John Doe joined</h6>
+                                    <p class="text-muted mb-1">Assigned to 3 active projects</p>
+                                    <small class="text-muted">2 days ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Quick Stats</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="stat-card mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Active Projects</h6>
+                                    <small class="text-muted">Currently running</small>
+                                </div>
+                                <div class="stat-number text-primary">12</div>
+                            </div>
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-primary" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Completed Tasks</h6>
+                                    <small class="text-muted">This week</small>
+                                </div>
+                                <div class="stat-number text-success">45</div>
+                            </div>
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-success" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Team Members</h6>
+                                    <small class="text-muted">Active users</small>
+                                </div>
+                                <div class="stat-number text-info">8</div>
+                            </div>
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-info" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Overdue Items</h6>
+                                    <small class="text-muted">Needs attention</small>
+                                </div>
+                                <div class="stat-number text-warning">3</div>
+                            </div>
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-warning" style="width: 25%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Modal Templates -->
+<div class="modal fade" id="quickModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Quick Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 1rem;
+    margin-top: -1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #fff, #f0f0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.hero-stats .stat-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.hero-visual {
+    position: relative;
+    z-index: 2;
+}
+
+.dashboard-preview {
+    background: rgba(255,255,255,0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.preview-header {
+    margin-bottom: 1rem;
+}
+
+.preview-dots {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.preview-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.preview-card {
+    background: rgba(255,255,255,0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.preview-bar {
+    height: 8px;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    border-radius: 4px;
+    transition: width 2s ease-in-out;
+}
+
+/* Section Titles */
+.section-title {
+    font-weight: 700;
+    color: #2c3e50;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 2px;
+}
+
+/* Action Cards */
+.action-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+
+.action-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 40px rgba(0,0,0,.15);
+}
+
+.action-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Feature Cards */
+.feature-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.12);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li {
+    margin-bottom: 0.5rem;
+}
+
+/* Activity Timeline */
+.activity-timeline {
+    padding: 1.5rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.activity-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    bottom: -1.5rem;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.activity-content h6 {
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+/* Stat Cards */
+.stat-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section {
+        margin-top: 0;
+        border-radius: 0;
+    }
+    
+    .min-vh-75 {
+        min-height: 60vh;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-stats {
+        margin-top: 2rem;
+    }
+    
+    .dashboard-preview {
+        margin-top: 2rem;
+    }
+    
+    .action-card, .feature-card {
+        margin-bottom: 1rem;
+    }
+    
+    .activity-timeline {
+        padding: 1rem;
+    }
+    
+    .activity-item {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .action-icon, .feature-icon {
+        font-size: 2rem;
+    }
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fade-in-up {
+    animation: slideInUp 0.6s ease-out;
+}
+
+.fade-in-left {
+    animation: fadeInLeft 0.6s ease-out;
+}
+
+.fade-in-right {
+    animation: fadeInRight 0.6s ease-out;
+}
+
+/* Loading States */
+.btn-loading {
+    pointer-events: none;
+}
+
+.btn-loading .loading {
+    margin-right: 0.5rem;
+}
+
+/* Hover Effects */
+.card {
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.12);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+</style>
+
+<script>
+// Initialize animations and interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress bars
+    const progressBars = document.querySelectorAll('.preview-bar');
+    progressBars.forEach((bar, index) => {
+        setTimeout(() => {
+            bar.style.width = bar.style.width;
+        }, index * 500);
+    });
+
+    // Add scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-up');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards and sections
+    document.querySelectorAll('.card, .section-title').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Add hover effects to stat cards
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0) scale(1)';
+        });
+    });
+
+    // Add click effects to action cards
+    document.querySelectorAll('.action-card').forEach(card => {
+        card.addEventListener('click', function() {
+            this.style.transform = 'translateY(-5px) scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'translateY(-10px) scale(1)';
+            }, 150);
+        });
+    });
+});
+
+// Quick modal functionality
+function showQuickModal(type) {
+    const modal = new bootstrap.Modal(document.getElementById('quickModal'));
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    
+    if (type === 'project') {
+        modalTitle.innerHTML = '<i class="fas fa-plus-circle text-primary me-2"></i>Create New Project';
+        modalBody.innerHTML = `
+            <form>
+                <div class="mb-3">
+                    <label for="projectName" class="form-label">Project Name</label>
+                    <input type="text" class="form-control" id="projectName" placeholder="Enter project name">
+                </div>
+                <div class="mb-3">
+                    <label for="projectDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="projectDescription" rows="3" placeholder="Enter project description"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="projectPriority" class="form-label">Priority</label>
+                    <select class="form-select" id="projectPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Create Project
+                    </button>
+                </div>
+            </form>
+        `;
+    } else if (type === 'task') {
+        modalTitle.innerHTML = '<i class="fas fa-tasks text-success me-2"></i>Add New Task';
+        modalBody.innerHTML = `
+            <form>
+                <div class="mb-3">
+                    <label for="taskTitle" class="form-label">Task Title</label>
+                    <input type="text" class="form-control" id="taskTitle" placeholder="Enter task title">
+                </div>
+                <div class="mb-3">
+                    <label for="taskProject" class="form-label">Project</label>
+                    <select class="form-select" id="taskProject">
+                        <option value="">Select a project</option>
+                        <option value="1">Website Redesign</option>
+                        <option value="2">Mobile App Development</option>
+                        <option value="3">Database Migration</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="taskDueDate" class="form-label">Due Date</label>
+                    <input type="date" class="form-control" id="taskDueDate">
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus me-2"></i>Add Task
+                    </button>
+                </div>
+            </form>
+        `;
+    }
+    
+    modal.show();
+}
+
+// Add smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Add parallax effect to hero section
+window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+        const rate = scrolled * -0.5;
+        heroSection.style.transform = `translateY(${rate}px)`;
+    }
+});
+
+// Add typing effect to hero title
+function typeWriter(element, text, speed = 100) {
+    let i = 0;
+    element.innerHTML = '';
+    
+    function type() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    
+    type();
+}
+
+// Initialize typing effect when page loads
+window.addEventListener('load', function() {
+    const heroTitle = document.querySelector('.hero-content h1');
+    if (heroTitle) {
+        const originalText = heroTitle.textContent;
+        typeWriter(heroTitle, originalText, 50);
+    }
+});
+</script>
 {% endblock %} 

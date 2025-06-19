@@ -9,11 +9,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --sidebar-width: 250px;
-            --navbar-height: 60px;
+            --sidebar-width: 280px;
+            --sidebar-width-collapsed: 70px;
+            --navbar-height: 70px;
             --footer-height: 60px;
             --dark-bg: #1a1a1a;
             --darker-bg: #141414;
@@ -21,21 +24,63 @@
             --text-color: #ffffff;
             --text-muted: #a0a0a0;
             --hover-bg: #2d2d2d;
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: #ffffff;
+            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         /* Navbar Styles */
         .navbar {
             height: var(--navbar-height);
-            box-shadow: 0 2px 4px rgba(0,0,0,.2);
-            background-color: var(--dark-bg) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d2d2d 100%) !important;
             border-bottom: 1px solid var(--border-color);
+            z-index: 1030;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .navbar-brand {
+            color: var(--text-color) !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .navbar-brand:hover {
+            color: var(--primary-color) !important;
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            color: var(--text-color) !important;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
         }
 
         /* Sidebar Styles */
@@ -45,10 +90,30 @@
             top: var(--navbar-height);
             left: 0;
             height: calc(100vh - var(--navbar-height) - var(--footer-height));
-            background-color: var(--darker-bg);
+            background: linear-gradient(180deg, var(--darker-bg) 0%, #1a1a1a 100%);
             border-right: 1px solid var(--border-color);
-            padding: 1rem;
+            padding: 1.5rem 1rem;
             overflow-y: auto;
+            transition: all var(--transition-speed) ease;
+            z-index: 1020;
+            box-shadow: 2px 0 10px rgba(0,0,0,.1);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
 
         /* Main Content Styles */
@@ -56,89 +121,179 @@
             margin-left: var(--sidebar-width);
             padding: 2rem;
             min-height: calc(100vh - var(--navbar-height) - var(--footer-height));
-            background-color: #ffffff;
+            background-color: #f8f9fa;
+            transition: all var(--transition-speed) ease;
         }
 
         /* Footer Styles */
         .footer {
             height: var(--footer-height);
-            background-color: var(--dark-bg);
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d2d2d 100%);
             border-top: 1px solid var(--border-color);
             margin-left: var(--sidebar-width);
+            transition: all var(--transition-speed) ease;
         }
 
         /* Sidebar Navigation */
         .sidebar-nav {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .sidebar-nav li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .sidebar-nav a {
             display: flex;
             align-items: center;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1rem;
             color: var(--text-color);
             text-decoration: none;
-            border-radius: 0.25rem;
-            transition: all 0.3s;
+            border-radius: 0.5rem;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .sidebar-nav a:hover::before {
+            left: 100%;
         }
 
         .sidebar-nav a:hover {
-            background-color: var(--hover-bg);
+            background: linear-gradient(135deg, var(--hover-bg) 0%, #3d3d3d 100%);
             color: var(--text-color);
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,.2);
+        }
+
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0056b3 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,123,255,.3);
+            position: relative;
+        }
+
+        .sidebar-nav a.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: white;
+            border-radius: 2px 0 0 2px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
         .sidebar-nav i {
-            margin-right: 0.5rem;
+            margin-right: 0.75rem;
             width: 20px;
             text-align: center;
+            font-size: 1.1rem;
+            transition: all var(--transition-speed) ease;
         }
 
-        /* Navbar Brand and Links */
-        .navbar-brand {
-            color: var(--text-color) !important;
-        }
-
-        .nav-link {
-            color: var(--text-color) !important;
-        }
-
-        .nav-link:hover {
-            color: var(--text-muted) !important;
-        }
-
-        /* Footer Text and Links */
-        .footer .text-muted {
-            color: var(--text-muted) !important;
-        }
-
-        .footer a {
-            color: var(--text-muted) !important;
-        }
-
-        .footer a:hover {
-            color: var(--text-color) !important;
+        .sidebar-nav a:hover i {
+            transform: scale(1.1);
         }
 
         /* Card Styles */
         .card {
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,.08);
+            transition: all var(--transition-speed) ease;
+            overflow: hidden;
+            background: white;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,.12);
         }
 
         .card-title {
             color: var(--dark-bg);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Button Styles */
+        .btn {
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,.2);
         }
 
         /* Responsive Design */
+        @media (max-width: 1200px) {
+            :root {
+                --sidebar-width: 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            :root {
+                --sidebar-width: 220px;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 100%;
+            }
+            
             .sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
+                width: 280px;
+                box-shadow: 2px 0 20px rgba(0,0,0,.3);
             }
 
             .sidebar.show {
@@ -148,27 +303,201 @@
             .main-content, .footer {
                 margin-left: 0;
             }
+
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .navbar {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Fade In Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Pulse Animation */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Backdrop for mobile sidebar */
+        .sidebar-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1010;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .sidebar-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Breadcrumb Styles */
+        .breadcrumb {
+            background: transparent;
+            padding: 0.75rem 0;
+            margin-bottom: 0;
+        }
+
+        .breadcrumb-item {
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            color: var(--text-muted);
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
+
+        /* Page Transition Effects */
+        .page-transition {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .page-transition.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading overlay for page transitions */
+        .page-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .page-loading.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .page-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
     </style>
 </head>
 <body>
+    <!-- Page Loading Overlay -->
+    <div class="page-loading" id="pageLoading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Backdrop for mobile sidebar -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid">
-            <button class="btn btn-link d-lg-none" id="sidebarToggle">
+            <button class="btn btn-link d-lg-none text-white" id="sidebarToggle" type="button">
                 <i class="fas fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="/">Project Tracker</a>
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-project-diagram me-2"></i>
+                Project Tracker
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                        <a class="nav-link" href="#" title="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill" style="font-size: 0.6rem;">3</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-user"></i></a>
+                        <a class="nav-link" href="#" title="Profile">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -176,43 +505,73 @@
     </nav>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <ul class="sidebar-nav">
+            <li>
+                <a href="/" class="active">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </li>
             <li>
                 <a href="/dashboard">
                     <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
+                    <span>Dashboard</span>
                 </a>
             </li>
             <li>
                 <a href="/projects">
                     <i class="fas fa-project-diagram"></i>
-                    Projects
+                    <span>Projects</span>
                 </a>
             </li>
             <li>
                 <a href="/tasks">
                     <i class="fas fa-tasks"></i>
-                    Tasks
+                    <span>Tasks</span>
                 </a>
             </li>
             <li>
                 <a href="/reports">
                     <i class="fas fa-chart-bar"></i>
-                    Reports
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li>
+                <a href="/calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Calendar</span>
+                </a>
+            </li>
+            <li>
+                <a href="/team">
+                    <i class="fas fa-users"></i>
+                    <span>Team</span>
                 </a>
             </li>
             <li>
                 <a href="/settings">
                     <i class="fas fa-cog"></i>
-                    Settings
+                    <span>Settings</span>
                 </a>
             </li>
         </ul>
     </div>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content fade-in">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/" class="text-decoration-none">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </li>
+                {% block breadcrumb %}{% endblock %}
+            </ol>
+        </nav>
+        
         {% block content %}
         {% endblock %}
     </main>
@@ -222,12 +581,21 @@
         <div class="container-fluid">
             <div class="row h-100 align-items-center">
                 <div class="col-6">
-                    <span class="text-muted">© 2024 Project Tracker</span>
+                    <span class="text-muted">© 2024 Project Tracker. All rights reserved.</span>
                 </div>
                 <div class="col-6 text-end">
-                    <a href="#" class="text-muted me-3"><i class="fab fa-github"></i></a>
-                    <a href="#" class="text-muted me-3"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-muted me-3" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-muted me-3" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-muted me-3" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="text-muted" title="Documentation">
+                        <i class="fas fa-book"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -238,22 +606,227 @@
     
     <!-- Custom JS -->
     <script>
+        // Enhanced sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+        const pageLoading = document.getElementById('pageLoading');
+        const mainContent = document.querySelector('.main-content');
+
         // Toggle sidebar on mobile
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('show');
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            sidebar.classList.toggle('show');
+            sidebarBackdrop.classList.toggle('show');
+            document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+        });
+
+        // Close sidebar when clicking backdrop
+        sidebarBackdrop.addEventListener('click', function() {
+            sidebar.classList.remove('show');
+            sidebarBackdrop.classList.remove('show');
+            document.body.style.overflow = '';
         });
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {
-            const sidebar = document.querySelector('.sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            
             if (window.innerWidth <= 768 && 
                 !sidebar.contains(event.target) && 
                 !sidebarToggle.contains(event.target)) {
                 sidebar.classList.remove('show');
+                sidebarBackdrop.classList.remove('show');
+                document.body.style.overflow = '';
             }
         });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('show');
+                sidebarBackdrop.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Active link highlighting
+        const currentPath = window.location.pathname;
+        sidebarLinks.forEach(link => {
+            // Remove any existing active class
+            link.classList.remove('active');
+            
+            // Check if current path matches the link href
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+            // Special case for home page
+            else if (currentPath === '/' && link.getAttribute('href') === '/') {
+                link.classList.add('active');
+            }
+        });
+
+        // Add click effects to sidebar links
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Don't prevent default for actual navigation
+                const href = this.getAttribute('href');
+                
+                // Remove active class from all links
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Add click animation
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+                
+                // Show loading for external navigation
+                if (href && href !== '#' && !href.startsWith('javascript:')) {
+                    showPageLoading();
+                    
+                    // Hide loading after a short delay (simulating page load)
+                    setTimeout(() => {
+                        hidePageLoading();
+                    }, 500);
+                }
+                
+                // Close sidebar on mobile after clicking a link
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('show');
+                    sidebarBackdrop.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Add hover effects to cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading states to buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!this.classList.contains('btn-loading')) {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<span class="loading"></span> Loading...';
+                    this.classList.add('btn-loading');
+                    this.disabled = true;
+                    
+                    // Simulate loading (remove in production)
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('btn-loading');
+                        this.disabled = false;
+                    }, 2000);
+                }
+            });
+        });
+
+        // Page transition handling
+        function showPageLoading() {
+            pageLoading.classList.add('show');
+        }
+
+        function hidePageLoading() {
+            pageLoading.classList.remove('show');
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#17a2b8'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 20px rgba(0,0,0,.15);
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+                max-width: 300px;
+            `;
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Hide and remove notification
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, duration);
+        }
+
+        // Show welcome notification on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const pageNames = {
+                '/': 'Home',
+                '/dashboard/': 'Dashboard',
+                '/projects/': 'Projects',
+                '/tasks/': 'Tasks',
+                '/reports/': 'Reports',
+                '/calendar/': 'Calendar',
+                '/team/': 'Team',
+                '/settings/': 'Settings'
+            };
+            
+            const pageName = pageNames[currentPath] || 'Page';
+            showNotification(`Welcome to ${pageName}!`, 'success', 2000);
+        });
+
+        // Add page transition class to main content
+        if (mainContent) {
+            mainContent.classList.add('page-transition');
+            setTimeout(() => {
+                mainContent.classList.add('loaded');
+            }, 100);
+        }
     </script>
 
     {% block extra_js %}{% endblock %}

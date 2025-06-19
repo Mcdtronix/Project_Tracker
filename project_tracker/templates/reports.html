@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports - Project Tracker{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">
+    <i class="fas fa-chart-bar me-1"></i>Reports
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="reports-header mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="reports-title">
+                <i class="fas fa-chart-bar text-info me-3"></i>
+                Reports
+            </h1>
+            <p class="text-muted">Analytics and insights for your projects and tasks.</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-info">
+                <i class="fas fa-download me-2"></i>Export Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Analytics Dashboard</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5">
+                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">Reports & Analytics</h4>
+                    <p class="text-muted">This page will display comprehensive reports and analytics for your projects.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.reports-header {
+    background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-top: -1rem;
+}
+
+.reports-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .reports-header {
+        padding: 1.5rem;
+        margin-top: 0;
+    }
+    
+    .reports-title {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %} 

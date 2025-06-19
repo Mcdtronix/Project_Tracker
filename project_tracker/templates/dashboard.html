@@ -1,0 +1,671 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Project Tracker{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">
+    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+</li>
+{% endblock %}
+
+{% block content %}
+<!-- Dashboard Header -->
+<div class="dashboard-header mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="dashboard-title">
+                <i class="fas fa-tachometer-alt text-primary me-3"></i>
+                Dashboard
+            </h1>
+            <p class="text-muted">Welcome back! Here's what's happening with your projects today.</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="dashboard-actions">
+                <button class="btn btn-outline-primary me-2" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
+                <button class="btn btn-primary" onclick="exportDashboard()">
+                    <i class="fas fa-download me-2"></i>Export
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Total Projects</h6>
+                        <h2 class="metric-value text-primary" id="totalProjects">{{ total_projects }}</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i>12% from last month
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-project-diagram text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Active Projects</h6>
+                        <h2 class="metric-value text-success" id="activeProjects">{{ active_projects }}</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i>8% from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-play-circle text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Total Tasks</h6>
+                        <h2 class="metric-value text-info" id="totalTasks">{{ total_tasks }}</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i>15% from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-tasks text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Completion Rate</h6>
+                        <h2 class="metric-value text-warning" id="completionRate">{{ task_completion_rate }}%</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i>5% from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts and Analytics Row -->
+<div class="row mb-4">
+    <!-- Weekly Progress Chart -->
+    <div class="col-xl-8 col-lg-7 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-area me-2"></i>Weekly Progress
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="weeklyChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Task Status Distribution -->
+    <div class="col-xl-4 col-lg-5 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>Task Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="taskStatusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Overview and Recent Activity -->
+<div class="row mb-4">
+    <!-- Project Progress -->
+    <div class="col-xl-6 col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-project-diagram me-2"></i>Project Progress
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for project in recent_projects %}
+                <div class="progress-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0">{{ project.name }}</h6>
+                        <span class="badge bg-{{ project.status|lower }}">{{ project.status }}</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-{{ project.status|lower }}" 
+                             style="width: {{ project.calculate_progress }}%"></div>
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-calendar me-1"></i>
+                        Due: {{ project.estimated_completion_date|default:"Not set" }}
+                    </small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-inbox fa-3x mb-3"></i>
+                    <p>No projects found</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Tasks -->
+    <div class="col-xl-6 col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-tasks me-2"></i>Recent Tasks
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="task-list">
+                    {% for task in recent_tasks %}
+                    <div class="task-item d-flex align-items-center mb-3 p-2 rounded">
+                        <div class="task-status me-3">
+                            <i class="fas fa-circle text-{{ task.status|lower }}"></i>
+                        </div>
+                        <div class="task-info flex-grow-1">
+                            <h6 class="mb-1">{{ task.title }}</h6>
+                            <small class="text-muted">{{ task.project.name }}</small>
+                        </div>
+                        <div class="task-meta text-end">
+                            <small class="text-muted">{{ task.created_at|date:"M d" }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                        <p>No tasks found</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts and Notifications -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Alerts & Notifications
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="alert alert-warning d-flex align-items-center">
+                            <i class="fas fa-clock me-2"></i>
+                            <div>
+                                <strong>{{ overdue_tasks }}</strong> tasks are overdue
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-danger d-flex align-items-center">
+                            <i class="fas fa-calendar-times me-2"></i>
+                            <div>
+                                <strong>{{ overdue_projects }}</strong> projects are behind schedule
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* Dashboard Styles */
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-top: -1rem;
+}
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* Metric Cards */
+.metric-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    overflow: hidden;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.15);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.metric-icon {
+    font-size: 3rem;
+    opacity: 0.8;
+}
+
+/* Progress Items */
+.progress-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.progress-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+/* Task Items */
+.task-item {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.task-item:hover {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    transform: translateX(5px);
+}
+
+.task-status i {
+    font-size: 0.75rem;
+}
+
+/* Alert Styles */
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 1.5rem;
+        margin-top: 0;
+    }
+    
+    .dashboard-title {
+        font-size: 2rem;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+    }
+    
+    .metric-icon {
+        font-size: 2.5rem;
+    }
+    
+    .dashboard-actions {
+        margin-top: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-header {
+        padding: 1rem;
+    }
+    
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+    
+    .metric-value {
+        font-size: 1.5rem;
+    }
+    
+    .metric-icon {
+        font-size: 2rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+// Dashboard functionality
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    startAutoRefresh();
+    addAnimations();
+});
+
+// Initialize Charts
+function initializeCharts() {
+    // Weekly Progress Chart
+    const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+    const weeklyChart = new Chart(weeklyCtx, {
+        type: 'line',
+        data: {
+            labels: [{% for item in weekly_data %}'{{ item.day }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Tasks Completed',
+                data: [{% for item in weekly_data %}{{ item.completed }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Task Status Chart
+    const taskCtx = document.getElementById('taskStatusChart').getContext('2d');
+    const taskChart = new Chart(taskCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['To Do', 'In Progress', 'Review', 'Completed', 'Blocked'],
+            datasets: [{
+                data: [
+                    {{ tasks_by_status.TODO }},
+                    {{ tasks_by_status.IN_PROGRESS }},
+                    {{ tasks_by_status.REVIEW }},
+                    {{ tasks_by_status.COMPLETED }},
+                    {{ tasks_by_status.BLOCKED }}
+                ],
+                backgroundColor: [
+                    '#6c757d',
+                    '#007bff',
+                    '#ffc107',
+                    '#28a745',
+                    '#dc3545'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Auto-refresh dashboard data
+function startAutoRefresh() {
+    setInterval(refreshDashboardData, 30000); // Refresh every 30 seconds
+}
+
+// Refresh dashboard data
+function refreshDashboardData() {
+    fetch('/api/dashboard/data/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(response => {
+            if (response.success) {
+                const data = response.data;
+                document.getElementById('totalProjects').textContent = data.total_projects;
+                document.getElementById('activeProjects').textContent = data.active_projects;
+                document.getElementById('totalTasks').textContent = data.total_tasks;
+                
+                // Add update animation
+                const elements = document.querySelectorAll('.metric-value');
+                elements.forEach(el => {
+                    el.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        el.style.transform = 'scale(1)';
+                    }, 200);
+                });
+                
+                // Show success notification
+                if (typeof showNotification === 'function') {
+                    showNotification('Dashboard updated successfully!', 'success', 2000);
+                }
+            } else {
+                throw new Error(response.error || 'Failed to update dashboard');
+            }
+        })
+        .catch(error => {
+            console.error('Error refreshing dashboard data:', error);
+            
+            // Show error notification
+            if (typeof showNotification === 'function') {
+                showNotification('Failed to update dashboard data.', 'error', 3000);
+            }
+        });
+}
+
+// Manual refresh
+function refreshDashboard() {
+    const refreshBtn = document.querySelector('.btn-outline-primary');
+    refreshBtn.innerHTML = '<span class="loading"></span> Refreshing...';
+    refreshBtn.disabled = true;
+    
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+// Export dashboard
+function exportDashboard() {
+    const exportBtn = document.querySelector('.btn-primary');
+    exportBtn.innerHTML = '<i class="fas fa-download me-2"></i>Exporting...';
+    exportBtn.disabled = true;
+    
+    // Simulate export process
+    setTimeout(() => {
+        exportBtn.innerHTML = '<i class="fas fa-download me-2"></i>Export';
+        exportBtn.disabled = false;
+        
+        // Create and download CSV
+        const csvContent = generateDashboardCSV();
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'dashboard-report.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }, 2000);
+}
+
+// Generate CSV for export
+function generateDashboardCSV() {
+    const data = [
+        ['Metric', 'Value'],
+        ['Total Projects', {{ total_projects }}],
+        ['Active Projects', {{ active_projects }}],
+        ['Total Tasks', {{ total_tasks }}],
+        ['Completed Tasks', {{ completed_tasks }}],
+        ['Completion Rate', '{{ task_completion_rate }}%']
+    ];
+    
+    return data.map(row => row.join(',')).join('\n');
+}
+
+// Add animations to elements
+function addAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-up');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards and sections
+    document.querySelectorAll('.card, .metric-card').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Add hover effects
+document.querySelectorAll('.metric-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px) scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+});
+
+// Add click effects to progress items
+document.querySelectorAll('.progress-item').forEach(item => {
+    item.addEventListener('click', function() {
+        this.style.transform = 'translateX(5px) scale(0.98)';
+        setTimeout(() => {
+            this.style.transform = 'translateX(5px) scale(1)';
+        }, 150);
+    });
+});
+
+// Add click effects to task items
+document.querySelectorAll('.task-item').forEach(item => {
+    item.addEventListener('click', function() {
+        this.style.transform = 'translateX(5px) scale(0.98)';
+        setTimeout(() => {
+            this.style.transform = 'translateX(5px) scale(1)';
+        }, 150);
+    });
+});
+</script>
+{% endblock %} 

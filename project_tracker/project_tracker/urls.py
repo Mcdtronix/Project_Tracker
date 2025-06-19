@@ -40,6 +40,18 @@ urlpatterns = [
     # Home page
     path('', views.home, name='home'),
     
+    # Dashboard
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('api/dashboard/data/', views.dashboard_data, name='dashboard_data'),
+    
+    # Page routes
+    path('projects/', views.projects, name='projects'),
+    path('tasks/', views.tasks, name='tasks'),
+    path('reports/', views.reports, name='reports'),
+    path('calendar/', views.calendar, name='calendar'),
+    path('team/', views.team, name='team'),
+    path('settings/', views.settings, name='settings'),
+    
     # Admin URLs
     path('admin/', admin.site.urls),
     
