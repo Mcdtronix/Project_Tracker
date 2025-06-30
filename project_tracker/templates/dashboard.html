@@ -59,13 +59,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="metric-info">
                         <h6 class="metric-label text-muted">Active Projects</h6>
-                        <h2 class="metric-value text-success" id="activeProjects">{{ active_projects }}</h2>
-                        <small class="text-success">
+                        <h2 class="metric-value text-primary" id="activeProjects">{{ active_projects }}</h2>
+                        <small class="text-success          ">
                             <i class="fas fa-arrow-up me-1"></i>8% from last week
                         </small>
                     </div>
                     <div class="metric-icon">
-                        <i class="fas fa-play-circle text-success"></i>
+                        <i class="fas fa-play-circle text-primary"></i>
                     </div>
                 </div>
             </div>
@@ -78,13 +78,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="metric-info">
                         <h6 class="metric-label text-muted">Total Tasks</h6>
-                        <h2 class="metric-value text-info" id="totalTasks">{{ total_tasks }}</h2>
+                        <h2 class="metric-value text-primary" id="totalTasks">{{ total_tasks }}</h2>
                         <small class="text-success">
                             <i class="fas fa-arrow-up me-1"></i>15% from last week
                         </small>
                     </div>
                     <div class="metric-icon">
-                        <i class="fas fa-tasks text-info"></i>
+                        <i class="fas fa-tasks text-success"></i>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="metric-info">
                         <h6 class="metric-label text-muted">Completion Rate</h6>
-                        <h2 class="metric-value text-warning" id="completionRate">{{ task_completion_rate }}%</h2>
+                        <h2 class="metric-value text-primary" id="completionRate">{{ task_completion_rate }}%</h2>
                         <small class="text-success">
                             <i class="fas fa-arrow-up me-1"></i>5% from last week
                         </small>
@@ -130,7 +130,7 @@
     <!-- Task Status Distribution -->
     <div class="col-xl-4 col-lg-5 mb-4">
         <div class="card">
-            <div class="card-header bg-success text-white">
+            <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">
                     <i class="fas fa-chart-pie me-2"></i>Task Status
                 </h5>
@@ -147,7 +147,7 @@
     <!-- Project Progress -->
     <div class="col-xl-6 col-lg-6 mb-4">
         <div class="card">
-            <div class="card-header bg-info text-white">
+            <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">
                     <i class="fas fa-project-diagram me-2"></i>Project Progress
                 </h5>
@@ -161,7 +161,7 @@
                     </div>
                     <div class="progress mb-2" style="height: 8px;">
                         <div class="progress-bar bg-{{ project.status|lower }}" 
-                             style="width: {{ project.calculate_progress }}%"></div>
+                             style="width: {{ project.calculate_progress|default:0 }}%"></div>
                     </div>
                     <small class="text-muted">
                         <i class="fas fa-calendar me-1"></i>
@@ -181,7 +181,7 @@
     <!-- Recent Tasks -->
     <div class="col-xl-6 col-lg-6 mb-4">
         <div class="card">
-            <div class="card-header bg-warning text-white">
+            <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">
                     <i class="fas fa-tasks me-2"></i>Recent Tasks
                 </h5>
@@ -252,7 +252,7 @@
 <style>
 /* Dashboard Styles */
 .dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #81bef3 0%, #495057 100%);
     color: white;
     padding: 2rem;
     border-radius: 1rem;
@@ -432,6 +432,33 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCharts();
     startAutoRefresh();
     addAnimations();
+    // Add hover effects
+    document.querySelectorAll('.metric-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    // Add click effects to progress items
+    document.querySelectorAll('.progress-item').forEach(item => {
+        item.addEventListener('click', function() {
+            this.style.transform = 'translateX(5px) scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'translateX(5px) scale(1)';
+            }, 150);
+        });
+    });
+    // Add click effects to task items
+    document.querySelectorAll('.task-item').forEach(item => {
+        item.addEventListener('click', function() {
+            this.style.transform = 'translateX(5px) scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'translateX(5px) scale(1)';
+            }, 150);
+        });
+    });
 });
 
 // Initialize Charts
@@ -441,10 +468,10 @@ function initializeCharts() {
     const weeklyChart = new Chart(weeklyCtx, {
         type: 'line',
         data: {
-            labels: [{% for item in weekly_data %}'{{ item.day }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            labels: [{% for item in weekly_data %}'{{ item.day|escapejs|default:'' }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
             datasets: [{
                 label: 'Tasks Completed',
-                data: [{% for item in weekly_data %}{{ item.completed }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                data: [{% for item in weekly_data %}{{ item.completed|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}],
                 borderColor: '#667eea',
                 backgroundColor: 'rgba(102, 126, 234, 0.1)',
                 borderWidth: 3,
@@ -488,11 +515,11 @@ function initializeCharts() {
             labels: ['To Do', 'In Progress', 'Review', 'Completed', 'Blocked'],
             datasets: [{
                 data: [
-                    {{ tasks_by_status.TODO }},
-                    {{ tasks_by_status.IN_PROGRESS }},
-                    {{ tasks_by_status.REVIEW }},
-                    {{ tasks_by_status.COMPLETED }},
-                    {{ tasks_by_status.BLOCKED }}
+                    {{ tasks_by_status.TODO|default:0 }},
+                    {{ tasks_by_status.IN_PROGRESS|default:0 }},
+                    {{ tasks_by_status.REVIEW|default:0 }},
+                    {{ tasks_by_status.COMPLETED|default:0 }},
+                    {{ tasks_by_status.BLOCKED|default:0 }}
                 ],
                 backgroundColor: [
                     '#6c757d',
@@ -606,11 +633,11 @@ function exportDashboard() {
 function generateDashboardCSV() {
     const data = [
         ['Metric', 'Value'],
-        ['Total Projects', {{ total_projects }}],
-        ['Active Projects', {{ active_projects }}],
-        ['Total Tasks', {{ total_tasks }}],
-        ['Completed Tasks', {{ completed_tasks }}],
-        ['Completion Rate', '{{ task_completion_rate }}%']
+        ['Total Projects', {{ total_projects|default:0 }}],
+        ['Active Projects', {{ active_projects|default:0 }}],
+        ['Total Tasks', {{ total_tasks|default:0 }}],
+        ['Completed Tasks', {{ completed_tasks|default:0 }}],
+        ['Completion Rate', '{{ task_completion_rate|default:"0" }}%']
     ];
     
     return data.map(row => row.join(',')).join('\n');
@@ -636,36 +663,5 @@ function addAnimations() {
         observer.observe(el);
     });
 }
-
-// Add hover effects
-document.querySelectorAll('.metric-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-5px) scale(1.02)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
-
-// Add click effects to progress items
-document.querySelectorAll('.progress-item').forEach(item => {
-    item.addEventListener('click', function() {
-        this.style.transform = 'translateX(5px) scale(0.98)';
-        setTimeout(() => {
-            this.style.transform = 'translateX(5px) scale(1)';
-        }, 150);
-    });
-});
-
-// Add click effects to task items
-document.querySelectorAll('.task-item').forEach(item => {
-    item.addEventListener('click', function() {
-        this.style.transform = 'translateX(5px) scale(0.98)';
-        setTimeout(() => {
-            this.style.transform = 'translateX(5px) scale(1)';
-        }, 150);
-    });
-});
 </script>
 {% endblock %} 
