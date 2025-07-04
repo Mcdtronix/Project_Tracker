@@ -439,7 +439,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1040;
+            z-index: 900;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -458,14 +458,14 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
+        .custom-modal, .custom-form-popup {
+            position: fixed;
+            z-index: 1060 !important;
+        }
     </style>
 </head>
 <body>
-    <!-- Page Loading Overlay -->
-    <div class="page-loading" id="pageLoading">
-        <div class="spinner"></div>
-    </div>
-
     <!-- Backdrop for mobile sidebar -->
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
@@ -608,8 +608,6 @@
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarBackdrop = document.getElementById('sidebarBackdrop');
         const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
-        const pageLoading = document.getElementById('pageLoading');
-        const mainContent = document.querySelector('.main-content');
 
         // Toggle sidebar on mobile
         sidebarToggle.addEventListener('click', function(e) {
@@ -746,15 +744,6 @@
             });
         });
 
-        // Page transition handling
-        function showPageLoading() {
-            pageLoading.classList.add('show');
-        }
-
-        function hidePageLoading() {
-            pageLoading.classList.remove('show');
-        }
-
         // Notification system
         function showNotification(message, type = 'success', duration = 3000) {
             const notification = document.createElement('div');
@@ -824,32 +813,6 @@
                 mainContent.classList.add('loaded');
             }, 100);
         }
-
-        // Show loading overlay on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const pageLoading = document.getElementById('pageLoading');
-            if (pageLoading) {
-                pageLoading.classList.add('show');
-            }
-        });
-
-        // Hide loading overlay when page is fully loaded
-        window.addEventListener('load', () => {
-            const pageLoading = document.getElementById('pageLoading');
-            if (pageLoading) {
-                setTimeout(() => {
-                    pageLoading.classList.remove('show');
-                }, 300); // Small delay to prevent flickering
-            }
-        });
-
-        // Automatically hide overlay before showing a modal
-        document.addEventListener('show.bs.modal', function () {
-            const pageLoading = document.getElementById('pageLoading');
-            if (pageLoading && pageLoading.classList.contains('show')) {
-                pageLoading.classList.remove('show');
-            }
-        });
     </script>
 
     <!-- Bootstrap 5 JS Bundle -->

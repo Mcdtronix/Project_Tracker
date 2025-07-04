@@ -31,7 +31,4 @@ class ProjectViewSet(viewsets.ModelViewSet):
     ordering_fields = ['created_at', 'start_date', 'end_date']
 
     def perform_create(self, serializer):
-        """
-        Set the project owner to the current user
-        """
-        serializer.save(owner=self.request.user)
+        serializer.save()

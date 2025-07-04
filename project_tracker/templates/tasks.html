@@ -208,6 +208,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label class="form-label">Project</label>
+                                <select class="form-select" name="project" id="editTaskProject" required>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label class="form-label">Status</label>
                                 <select class="form-select" name="status" id="editTaskStatus">
                                     <option value="TODO">To Do</option>
@@ -216,12 +224,6 @@
                                     <option value="COMPLETED">Completed</option>
                                     <option value="BLOCKED">Blocked</option>
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Actual Hours</label>
-                                <input type="number" class="form-control" name="actual_hours" id="editTaskActualHours" step="0.5" min="0">
                             </div>
                         </div>
                     </div>
@@ -242,6 +244,14 @@
                             <div class="mb-3">
                                 <label class="form-label">Completed Date</label>
                                 <input type="date" class="form-control" name="completed_date" id="editTaskCompletedDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Actual Hours</label>
+                                <input type="number" class="form-control" name="actual_hours" id="editTaskActualHours" step="0.5" min="0">
                             </div>
                         </div>
                     </div>
@@ -481,18 +491,17 @@ function getPriorityColor(priority) {
 
 // Populate project selects
 function populateProjectSelects() {
+    // Populate create form
     const createSelect = document.querySelector('#createTaskForm select[name="project"]');
-    const editSelect = document.querySelector('#editTaskForm select[name="project"]');
-    
-    const options = allProjects.map(project => 
-        `<option value="${project.id}">${project.name}</option>`
-    ).join('');
-    
     if (createSelect) {
-        createSelect.innerHTML = '<option value="">Select Project</option>' + options;
+        createSelect.innerHTML = '<option value="">Select Project</option>' +
+            allProjects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
     }
+    // Populate edit form
+    const editSelect = document.querySelector('#editTaskForm select[name="project"]');
     if (editSelect) {
-        editSelect.innerHTML = '<option value="">Select Project</option>' + options;
+        editSelect.innerHTML = '<option value="">Select Project</option>' +
+            allProjects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
     }
 }
 
@@ -593,7 +602,6 @@ function createTask() {
 function editTask(taskId) {
     const task = allTasks.find(t => t.id === taskId);
     if (!task) return;
-    
     // Populate edit form
     document.getElementById('editTaskId').value = task.id;
     document.getElementById('editTaskTitle').value = task.title;
@@ -604,7 +612,7 @@ function editTask(taskId) {
     document.getElementById('editTaskDueDate').value = task.due_date || '';
     document.getElementById('editTaskCompletedDate').value = task.completed_date || '';
     document.getElementById('editTaskActualHours').value = task.actual_hours || '';
-    
+    document.getElementById('editTaskProject').value = task.project;
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('editTaskModal'));
     modal.show();

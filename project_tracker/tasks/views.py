@@ -23,7 +23,4 @@ class TaskViewSet(viewsets.ModelViewSet):
     ordering_fields = ['created_at', 'due_date', 'priority']
 
     def perform_create(self, serializer):
-        """
-        Set the task creator to the current user
-        """
-        serializer.save(created_by=self.request.user)
+        serializer.save()
