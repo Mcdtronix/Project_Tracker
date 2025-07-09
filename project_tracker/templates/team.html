@@ -19,25 +19,123 @@
             <p class="text-muted">Manage your team members and their roles.</p>
         </div>
         <div class="col-md-4 text-end">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="showAddMemberModal()">
                 <i class="fas fa-user-plus me-2"></i>Add Member
             </button>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
+<!-- Team Stats -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
         <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Team Members</h5>
-            </div>
             <div class="card-body">
-                <div class="text-center py-5">
-                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                    <h4 class="text-muted">Team Management</h4>
-                    <p class="text-muted">This page will display team members and their project assignments.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Total Members</h6>
+                        <h3 class="mb-0" id="totalMembers">0</h3>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Active Projects</h6>
+                        <h3 class="mb-0" id="activeProjects">0</h3>
+                    </div>
+                    <div class="text-success">
+                        <i class="fas fa-project-diagram fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Total Tasks</h6>
+                        <h3 class="mb-0" id="totalTasks">0</h3>
+                    </div>
+                    <div class="text-info">
+                        <i class="fas fa-tasks fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Completion Rate</h6>
+                        <h3 class="mb-0" id="completionRate">0%</h3>
+                    </div>
+                    <div class="text-warning">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team Members Grid -->
+<div class="row" id="teamMembersGrid">
+    <!-- Team members will be loaded here dynamically -->
+</div>
+
+<!-- Add Team Member Modal -->
+<div class="modal fade" id="addMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Team Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addMemberForm">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" name="role">
+                            <option value="developer">Developer</option>
+                            <option value="designer">Designer</option>
+                            <option value="manager">Project Manager</option>
+                            <option value="analyst">Business Analyst</option>
+                            <option value="tester">QA Tester</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addTeamMember()">Add Member</button>
             </div>
         </div>
     </div>
@@ -58,6 +156,32 @@
     margin-bottom: 0.5rem;
 }
 
+.team-member-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    overflow: hidden;
+}
+
+.team-member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.15);
+}
+
+.member-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
 @media (max-width: 768px) {
     .team-header {
         padding: 1.5rem;
@@ -69,4 +193,209 @@
     }
 }
 </style>
+
+<script>
+// Load team data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadTeamData();
+});
+
+// Load team data from API
+function loadTeamData() {
+    Promise.all([
+        fetch('/api/dashboard/data/').then(r => r.json()),
+        fetch('/api/projects/projects/').then(r => r.json()),
+        fetch('/api/tasks/tasks/').then(r => r.json())
+    ]).then(([dashboardData, projectsData, tasksData]) => {
+        const data = dashboardData.data || dashboardData;
+        const projects = projectsData.results || projectsData;
+        const tasks = tasksData.results || tasksData;
+        
+        // Update stats
+        document.getElementById('totalMembers').textContent = data.team_members || 0;
+        document.getElementById('activeProjects').textContent = data.active_projects || 0;
+        document.getElementById('totalTasks').textContent = data.total_tasks || 0;
+        document.getElementById('completionRate').textContent = (data.task_completion_rate || 0) + '%';
+        
+        // Display team members
+        displayTeamMembers(projects, tasks);
+    }).catch(error => {
+        console.error('Error loading team data:', error);
+        displayTeamMembers([], []);
+    });
+}
+
+// Display team members
+function displayTeamMembers(projects, tasks) {
+    const grid = document.getElementById('teamMembersGrid');
+    
+    // Create mock team members (in a real app, you'd fetch from User model)
+    const teamMembers = [
+        {
+            id: 1,
+            username: 'john_doe',
+            first_name: 'John',
+            last_name: 'Doe',
+            email: 'john.doe@example.com',
+            role: 'Project Manager',
+            avatar: 'JD',
+            projects: projects.filter(p => p.id <= 2).length,
+            tasks: tasks.filter(t => t.id <= 5).length
+        },
+        {
+            id: 2,
+            username: 'jane_smith',
+            first_name: 'Jane',
+            last_name: 'Smith',
+            email: 'jane.smith@example.com',
+            role: 'Developer',
+            avatar: 'JS',
+            projects: projects.filter(p => p.id > 2 && p.id <= 4).length,
+            tasks: tasks.filter(t => t.id > 5 && t.id <= 10).length
+        },
+        {
+            id: 3,
+            username: 'mike_wilson',
+            first_name: 'Mike',
+            last_name: 'Wilson',
+            email: 'mike.wilson@example.com',
+            role: 'Designer',
+            avatar: 'MW',
+            projects: projects.filter(p => p.id > 4).length,
+            tasks: tasks.filter(t => t.id > 10).length
+        }
+    ];
+    
+    if (teamMembers.length === 0) {
+        grid.innerHTML = `
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No team members found</h4>
+                    <p class="text-muted">Add your first team member to get started.</p>
+                    <button class="btn btn-primary" onclick="showAddMemberModal()">
+                        <i class="fas fa-user-plus me-2"></i>Add Member
+                    </button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = teamMembers.map(member => `
+        <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+            <div class="team-member-card card h-100">
+                <div class="card-body text-center">
+                    <div class="member-avatar">${member.avatar}</div>
+                    <h5 class="card-title">${member.first_name} ${member.last_name}</h5>
+                    <p class="text-muted mb-2">${member.role}</p>
+                    <p class="text-muted mb-3">${member.email}</p>
+                    
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="border-end">
+                                <h6 class="text-primary">${member.projects}</h6>
+                                <small class="text-muted">Projects</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-success">${member.tasks}</h6>
+                            <small class="text-muted">Tasks</small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewMemberProfile(${member.id})">
+                            <i class="fas fa-eye me-1"></i>View
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="editMember(${member.id})">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeMember(${member.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Show add member modal
+function showAddMemberModal() {
+    const modal = new bootstrap.Modal(document.getElementById('addMemberModal'));
+    modal.show();
+}
+
+// Add team member
+function addTeamMember() {
+    const form = document.getElementById('addMemberForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Show loading state
+    const submitBtn = document.querySelector('#addMemberModal .btn-primary');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Adding...';
+    submitBtn.disabled = true;
+    
+    // In a real app, you'd send this to your API
+    console.log('Adding team member:', data);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Close modal and reset form
+        bootstrap.Modal.getInstance(document.getElementById('addMemberModal')).hide();
+        form.reset();
+        
+        // Reload team data
+        loadTeamData();
+        
+        // Show success notification
+        if (typeof showNotification === 'function') {
+            showNotification('Team member added successfully!', 'success', 3000);
+        }
+        
+        // Reset button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 1000);
+}
+
+// View member profile
+function viewMemberProfile(memberId) {
+    console.log('Viewing member profile:', memberId);
+    if (typeof showNotification === 'function') {
+        showNotification('Member profile view coming soon!', 'info', 3000);
+    }
+}
+
+// Edit member
+function editMember(memberId) {
+    console.log('Editing member:', memberId);
+    if (typeof showNotification === 'function') {
+        showNotification('Member edit functionality coming soon!', 'info', 3000);
+    }
+}
+
+// Remove member
+function removeMember(memberId) {
+    if (!confirm('Are you sure you want to remove this team member?')) {
+        return;
+    }
+    
+    console.log('Removing member:', memberId);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Reload team data
+        loadTeamData();
+        
+        // Show success notification
+        if (typeof showNotification === 'function') {
+            showNotification('Team member removed successfully!', 'success', 3000);
+        }
+    }, 500);
+}
+</script>
 {% endblock %} 

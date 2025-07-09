@@ -1,6 +1,7 @@
 # projects/models.py
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 class ProjectCategory(models.Model):
     """
@@ -37,6 +38,7 @@ class Project(models.Model):
     
     # Relationships
     category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    team_members = models.ManyToManyField(User, blank=True, related_name='projects')
 
     # Project Metadata
     status = models.CharField(

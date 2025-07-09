@@ -33,15 +33,99 @@
                 <h5 class="mb-0">Project Calendar</h5>
             </div>
             <div class="card-body">
-                <div class="text-center py-5">
-                    <i class="fas fa-calendar fa-3x text-muted mb-3"></i>
-                    <h4 class="text-muted">Calendar View</h4>
-                    <p class="text-muted">This page will display a calendar with project deadlines and events.</p>
-                </div>
+                <div id="calendar"></div>
             </div>
         </div>
     </div>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 700,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
+        events: fetchCalendarEvents,
+        eventClick: function(info) {
+            if (info.event.url) {
+                window.open(info.event.url, '_blank');
+                info.jsEvent.preventDefault();
+            }
+        },
+        eventDisplay: 'block',
+    });
+    calendar.render();
+});
+
+function fetchCalendarEvents(fetchInfo, successCallback, failureCallback) {
+    Promise.all([
+        fetch('/api/projects/projects/').then(r => r.json()),
+        fetch('/api/tasks/tasks/').then(r => r.json())
+    ]).then(([projects, tasks]) => {
+        let events = [];
+        (projects.results || projects).forEach(project => {
+            if (project.start_date) {
+                events.push({
+                    title: `[Project Start] ${project.name}`,
+                    start: project.start_date,
+                    color: '#1976d2',
+                    url: `/projects/${project.id}/`
+                });
+            }
+            if (project.estimated_completion_date) {
+                events.push({
+                    title: `[Project Due] ${project.name}`,
+                    start: project.estimated_completion_date,
+                    color: '#388e3c',
+                    url: `/projects/${project.id}/`
+                });
+            }
+            if (project.end_date) {
+                events.push({
+                    title: `[Project End] ${project.name}`,
+                    start: project.end_date,
+                    color: '#d32f2f',
+                    url: `/projects/${project.id}/`
+                });
+            }
+        });
+        (tasks.results || tasks).forEach(task => {
+            if (task.start_date) {
+                events.push({
+                    title: `[Task Start] ${task.title}`,
+                    start: task.start_date,
+                    color: '#0288d1',
+                    url: `/tasks/?project=${task.project}`
+                });
+            }
+            if (task.due_date) {
+                events.push({
+                    title: `[Task Due] ${task.title}`,
+                    start: task.due_date,
+                    color: '#fbc02d',
+                    url: `/tasks/?project=${task.project}`
+                });
+            }
+            if (task.completed_date) {
+                events.push({
+                    title: `[Task Completed] ${task.title}`,
+                    start: task.completed_date,
+                    color: '#43a047',
+                    url: `/tasks/?project=${task.project}`
+                });
+            }
+        });
+        successCallback(events);
+    }).catch(failureCallback);
+}
+</script>
 
 <style>
 .calendar-header {

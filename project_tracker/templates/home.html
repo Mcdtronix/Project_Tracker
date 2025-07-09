@@ -3,6 +3,117 @@
 {% block title %}Home - Project Tracker{% endblock %}
 
 {% block content %}
+<!-- Dashboard Metric Cards (from dashboard.html) -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100 fade-in-up" style="animation-delay: 0.1s;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Total Projects</h6>
+                        <h2 class="metric-value text-primary" id="totalProjects">0</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="totalProjectsChange">0%</span> from last month
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-project-diagram text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100 fade-in-up" style="animation-delay: 0.2s;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Active Projects</h6>
+                        <h2 class="metric-value text-primary" id="activeProjects">0</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="activeProjectsChange">0%</span> from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-play-circle text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100 fade-in-up" style="animation-delay: 0.3s;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Total Tasks</h6>
+                        <h2 class="metric-value text-primary" id="totalTasks">0</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="totalTasksChange">0%</span> from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-tasks text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100 fade-in-up" style="animation-delay: 0.4s;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Completion Rate</h6>
+                        <h2 class="metric-value text-primary" id="completionRate">0%</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="completionRateChange">0%</span> from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts and Notifications (from dashboard.html) -->
+<div class="row fade-in-up" style="animation-delay: 0.5s;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Alerts & Notifications
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="alert alert-warning d-flex align-items-center">
+                            <i class="fas fa-clock me-2"></i>
+                            <div>
+                                <strong id="overdueTasks">0</strong> tasks are overdue
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-danger d-flex align-items-center">
+                            <i class="fas fa-calendar-times me-2"></i>
+                            <div>
+                                <strong id="overdueProjects">0</strong> projects are behind schedule
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-bottom: 2rem;"></div>
+
 <!-- Hero Section -->
 <section class="hero-section mb-5">
     <div class="container">
@@ -76,115 +187,6 @@
     </div>
 </section>
 
-<!-- Dashboard Metric Cards (from dashboard.html) -->
-<div class="row mb-4">
-    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
-        <div class="metric-card card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="metric-info">
-                        <h6 class="metric-label text-muted">Total Projects</h6>
-                        <h2 class="metric-value text-primary" id="totalProjects">0</h2>
-                        <small class="text-success">
-                            <i class="fas fa-arrow-up me-1"></i><span id="totalProjectsChange">0%</span> from last month
-                        </small>
-                    </div>
-                    <div class="metric-icon">
-                        <i class="fas fa-project-diagram text-primary"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
-        <div class="metric-card card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="metric-info">
-                        <h6 class="metric-label text-muted">Active Projects</h6>
-                        <h2 class="metric-value text-primary" id="activeProjects">0</h2>
-                        <small class="text-success">
-                            <i class="fas fa-arrow-up me-1"></i><span id="activeProjectsChange">0%</span> from last week
-                        </small>
-                    </div>
-                    <div class="metric-icon">
-                        <i class="fas fa-play-circle text-primary"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
-        <div class="metric-card card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="metric-info">
-                        <h6 class="metric-label text-muted">Total Tasks</h6>
-                        <h2 class="metric-value text-primary" id="totalTasks">0</h2>
-                        <small class="text-success">
-                            <i class="fas fa-arrow-up me-1"></i><span id="totalTasksChange">0%</span> from last week
-                        </small>
-                    </div>
-                    <div class="metric-icon">
-                        <i class="fas fa-tasks text-success"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
-        <div class="metric-card card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="metric-info">
-                        <h6 class="metric-label text-muted">Completion Rate</h6>
-                        <h2 class="metric-value text-primary" id="completionRate">0%</h2>
-                        <small class="text-success">
-                            <i class="fas fa-arrow-up me-1"></i><span id="completionRateChange">0%</span> from last week
-                        </small>
-                    </div>
-                    <div class="metric-icon">
-                        <i class="fas fa-chart-line text-warning"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Alerts and Notifications (from dashboard.html) -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-danger text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Alerts & Notifications
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="alert alert-warning d-flex align-items-center">
-                            <i class="fas fa-clock me-2"></i>
-                            <div>
-                                <strong id="overdueTasks">0</strong> tasks are overdue
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="alert alert-danger d-flex align-items-center">
-                            <i class="fas fa-calendar-times me-2"></i>
-                            <div>
-                                <strong id="overdueProjects">0</strong> projects are behind schedule
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Quick Actions Section -->
 <section class="quick-actions mb-5">
     <div class="container">
@@ -198,7 +200,7 @@
         </div>
         <div class="row g-4">
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="100">
+                <div class="action-card card h-100 fade-in-up" style="animation-delay: 0.1s;">
                     <div class="card-body text-center p-4">
                         <div class="action-icon mb-3">
                             <i class="fas fa-plus-circle text-primary"></i>
@@ -212,7 +214,7 @@
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="200">
+                <div class="action-card card h-100 fade-in-up" style="animation-delay: 0.2s;">
                     <div class="card-body text-center p-4">
                         <div class="action-icon mb-3">
                             <i class="fas fa-tasks text-success"></i>
@@ -226,7 +228,7 @@
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="300">
+                <div class="action-card card h-100 fade-in-up" style="animation-delay: 0.3s;">
                     <div class="card-body text-center p-4">
                         <div class="action-icon mb-3">
                             <i class="fas fa-chart-line text-info"></i>
@@ -240,7 +242,7 @@
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="action-card card h-100" data-aos="fade-up" data-aos-delay="400">
+                <div class="action-card card h-100 fade-in-up" style="animation-delay: 0.4s;">
                     <div class="card-body text-center p-4">
                         <div class="action-icon mb-3">
                             <i class="fas fa-calendar-alt text-warning"></i>
@@ -270,7 +272,7 @@
         </div>
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
-                <div class="feature-card card h-100" data-aos="fade-right" data-aos-delay="100">
+                <div class="feature-card card h-100 fade-in-up" style="animation-delay: 0.1s;">
                     <div class="card-body p-4">
                         <div class="feature-icon mb-3">
                             <i class="fas fa-project-diagram text-primary"></i>
@@ -286,7 +288,7 @@
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
-                <div class="feature-card card h-100" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card card h-100 fade-in-up" style="animation-delay: 0.2s;">
                     <div class="card-body p-4">
                         <div class="feature-icon mb-3">
                             <i class="fas fa-tasks text-success"></i>
@@ -302,7 +304,7 @@
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
-                <div class="feature-card card h-100" data-aos="fade-left" data-aos-delay="300">
+                <div class="feature-card card h-100 fade-in-up" style="animation-delay: 0.3s;">
                     <div class="card-body p-4">
                         <div class="feature-icon mb-3">
                             <i class="fas fa-chart-bar text-info"></i>
@@ -351,7 +353,7 @@
                         <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Quick Stats</h5>
                     </div>
                     <div class="card-body" id="quick-stats">
-                        <div class="stat-card mb-3">
+                        <div class="stat-card mb-3 fade-in-up" style="animation-delay: 0.1s;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-1">Active Projects</h6>
@@ -363,7 +365,7 @@
                                 <div class="progress-bar bg-primary" id="active-projects-bar" style="width: 0%"></div>
                             </div>
                         </div>
-                        <div class="stat-card mb-3">
+                        <div class="stat-card mb-3 fade-in-up" style="animation-delay: 0.2s;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-1">Completed Tasks</h6>
@@ -375,7 +377,7 @@
                                 <div class="progress-bar bg-success" id="completed-tasks-bar" style="width: 0%"></div>
                             </div>
                         </div>
-                        <div class="stat-card mb-3">
+                        <div class="stat-card mb-3 fade-in-up" style="animation-delay: 0.3s;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-1">Team Members</h6>
@@ -387,7 +389,7 @@
                                 <div class="progress-bar bg-info" id="team-members-bar" style="width: 0%"></div>
                             </div>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card fade-in-up" style="animation-delay: 0.4s;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-1">Overdue Items</h6>

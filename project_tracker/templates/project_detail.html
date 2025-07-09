@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Project Details - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-project-diagram me-2"></i>{{ project.name }}</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ project.description|default:'No description provided.' }}</p>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Status:</strong> <span class="badge bg-secondary">{{ project.status }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Priority:</strong> {{ project.priority }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Start Date:</strong> {{ project.start_date|date:'M d, Y' }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Estimated Completion:</strong> {{ project.estimated_completion_date|date:'M d, Y' }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Budget:</strong> ${{ project.budget|default:'0.00' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <a href="/projects/" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Back to Projects</a>
+                    <button class="btn btn-success ms-2" onclick="editProjectDetail({{ project.id }}, '{{ project.name|escapejs }}', '{{ project.priority }}', '{{ project.description|escapejs }}', '{{ project.start_date }}', '{{ project.estimated_completion_date }}', '{{ project.budget }}')">
+                        <i class="fas fa-edit me-1"></i>Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Project Modal (reuse from projects.html) -->
+<div class="modal fade" id="editProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProjectForm">
+                    <input type="hidden" name="id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Project Name</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Priority</label>
+                                <select class="form-select" name="priority">
+                                    <option value="LOW">Low</option>
+                                    <option value="MEDIUM">Medium</option>
+                                    <option value="HIGH">High</option>
+                                    <option value="CRITICAL">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" name="start_date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Estimated Completion</label>
+                                <input type="date" class="form-control" name="estimated_completion_date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Budget</label>
+                        <input type="number" class="form-control" name="budget" step="0.01">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="updateProjectDetail()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function editProjectDetail(id, name, priority, description, start_date, estimated_completion_date, budget) {
+    const form = document.getElementById('editProjectForm');
+    form.elements['id'].value = id;
+    form.elements['name'].value = name;
+    form.elements['priority'].value = priority;
+    form.elements['description'].value = description;
+    form.elements['start_date'].value = start_date;
+    form.elements['estimated_completion_date'].value = estimated_completion_date;
+    form.elements['budget'].value = budget;
+    const modal = new bootstrap.Modal(document.getElementById('editProjectModal'));
+    modal.show();
+}
+
+function updateProjectDetail() {
+    const form = document.getElementById('editProjectForm');
+    const projectId = form.elements['id'].value;
+    const data = Object.fromEntries(new FormData(form).entries());
+    // Show loading state
+    const submitBtn = document.querySelector('#editProjectModal .btn-success');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Saving...';
+    submitBtn.disabled = true;
+    fetch(`/api/projects/projects/${projectId}/`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Close modal and reset form
+        bootstrap.Modal.getInstance(document.getElementById('editProjectModal')).hide();
+        form.reset();
+        // Optionally reload or redirect
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error updating project:', error);
+        alert('Failed to update project. Please try again.');
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %} 

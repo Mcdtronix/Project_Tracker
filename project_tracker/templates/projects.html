@@ -93,6 +93,68 @@
     </div>
 </div>
 
+<!-- Edit Project Modal -->
+<div class="modal fade" id="editProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProjectForm">
+                    <input type="hidden" name="id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Project Name</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Priority</label>
+                                <select class="form-select" name="priority">
+                                    <option value="LOW">Low</option>
+                                    <option value="MEDIUM">Medium</option>
+                                    <option value="HIGH">High</option>
+                                    <option value="CRITICAL">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" name="start_date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Estimated Completion</label>
+                                <input type="date" class="form-control" name="estimated_completion_date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Budget</label>
+                        <input type="number" class="form-control" name="budget" step="0.01">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="updateProject()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 .projects-header {
     background: linear-gradient(135deg, #81bef3 0%, #495057 100%);
@@ -251,9 +313,9 @@ function displayProjects(projects) {
                     <!-- Action Buttons -->
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group" role="group">
-                            <button class="btn btn-sm btn-outline-primary" onclick="viewProject(${project.id})">
+                            <a class="btn btn-sm btn-outline-primary" href="/projects/${project.id}/">
                                 <i class="fas fa-eye me-1"></i>View
-                            </button>
+                            </a>
                             <button class="btn btn-sm btn-outline-success" onclick="editProject(${project.id})">
                                 <i class="fas fa-edit me-1"></i>Edit
                             </button>
@@ -372,12 +434,62 @@ function viewProject(projectId) {
 function editProject(projectId) {
     const project = allProjects.find(p => p.id === projectId);
     if (!project) return;
-    
-    // Populate edit form (you can add an edit modal similar to create modal)
-    console.log('Editing project:', project);
-    if (typeof showNotification === 'function') {
-        showNotification('Project edit functionality coming soon!', 'info', 3000);
-    }
+    const form = document.getElementById('editProjectForm');
+    form.elements['id'].value = project.id;
+    form.elements['name'].value = project.name;
+    form.elements['priority'].value = project.priority;
+    form.elements['description'].value = project.description || '';
+    form.elements['start_date'].value = project.start_date || '';
+    form.elements['estimated_completion_date'].value = project.estimated_completion_date || '';
+    form.elements['budget'].value = project.budget || '';
+    const modal = new bootstrap.Modal(document.getElementById('editProjectModal'));
+    modal.show();
+}
+
+function updateProject() {
+    const form = document.getElementById('editProjectForm');
+    const projectId = form.elements['id'].value;
+    const data = Object.fromEntries(new FormData(form).entries());
+    // Show loading state
+    const submitBtn = document.querySelector('#editProjectModal .btn-success');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Saving...';
+    submitBtn.disabled = true;
+    fetch(`/api/projects/projects/${projectId}/`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Close modal and reset form
+        bootstrap.Modal.getInstance(document.getElementById('editProjectModal')).hide();
+        form.reset();
+        // Reload projects
+        loadProjects();
+        // Show success notification
+        if (typeof showNotification === 'function') {
+            showNotification('Project updated successfully!', 'success', 3000);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating project:', error);
+        if (typeof showNotification === 'function') {
+            showNotification('Failed to update project. Please try again.', 'error', 5000);
+        }
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
 }
 
 // Delete project

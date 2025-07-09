@@ -11,6 +11,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils.timesince import timesince
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from projects.models import Project
 
 def home(request):
     """Home page view"""
@@ -149,6 +151,11 @@ def team(request):
 def settings(request):
     """Settings page view"""
     return render(request, 'settings.html')
+
+def project_detail(request, project_id):
+    """Project detail page view"""
+    project = get_object_or_404(Project, id=project_id)
+    return render(request, 'project_detail.html', {'project': project})
 
 @csrf_exempt
 @require_http_methods(["GET"])
