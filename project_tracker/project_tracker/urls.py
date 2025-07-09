@@ -58,6 +58,7 @@ urlpatterns = [
     # App-specific URLs
     path('api/projects/', include('projects.urls')),
     path('api/tasks/', include('tasks.urls')),
+    path('api/recent-activity/', views.recent_activity, name='recent-activity'),
 
     #  Documentations
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

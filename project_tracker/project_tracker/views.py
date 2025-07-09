@@ -7,6 +7,10 @@ from datetime import datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import json
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.utils.timesince import timesince
+from django.contrib.auth.models import User
 
 def home(request):
     """Home page view"""
@@ -157,15 +161,15 @@ def dashboard_data(request):
             active_projects = Project.objects.filter(status='IN_PROGRESS').count()
             total_tasks = Task.objects.count()
             completed_tasks = Task.objects.filter(status='COMPLETED').count()
-            
+            overdue_projects = Project.objects.filter(estimated_completion_date__lt=timezone.now().date(), status__in=['PLANNING', 'IN_PROGRESS']).count()
+            overdue_tasks = Task.objects.filter(due_date__lt=timezone.now().date(), status__in=['TODO', 'IN_PROGRESS']).count()
+            team_members = User.objects.filter(is_active=True).count()
             # Get recent activity
             recent_projects = Project.objects.order_by('-created_at')[:3]
             recent_tasks = Task.objects.select_related('project').order_by('-created_at')[:5]
-            
             # Calculate completion rates
             project_completion_rate = (active_projects / total_projects * 100) if total_projects > 0 else 0
             task_completion_rate = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
-            
             return JsonResponse({
                 'success': True,
                 'data': {
@@ -173,6 +177,9 @@ def dashboard_data(request):
                     'active_projects': active_projects,
                     'total_tasks': total_tasks,
                     'completed_tasks': completed_tasks,
+                    'overdue_projects': overdue_projects,
+                    'overdue_tasks': overdue_tasks,
+                    'team_members': team_members,
                     'project_completion_rate': round(project_completion_rate, 1),
                     'task_completion_rate': round(task_completion_rate, 1),
                     'recent_projects': [
@@ -203,6 +210,9 @@ def dashboard_data(request):
                 'active_projects': 0,
                 'total_tasks': 0,
                 'completed_tasks': 0,
+                'overdue_projects': 0,
+                'overdue_tasks': 0,
+                'team_members': 0,
                 'project_completion_rate': 0,
                 'task_completion_rate': 0,
                 'recent_projects': [],
@@ -210,5 +220,67 @@ def dashboard_data(request):
             },
             'timestamp': timezone.now().isoformat()
         }, status=500)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
     
-    return JsonResponse({'error': 'Invalid request method'}, status=400) 
+@api_view(['GET'])
+def recent_activity(request):
+    activities = []
+    now = timezone.now()
+
+    # Recent completed projects
+    completed_projects = Project.objects.filter(status='COMPLETED').order_by('-updated_at')[:2]
+    for project in completed_projects:
+        activities.append({
+            'icon': 'fa-check',
+            'icon_color': 'success',
+            'title': f'Project "{project.name}" completed',
+            'description': 'Project marked as completed',
+            'time_ago': timesince(project.updated_at, now) + ' ago' if project.updated_at else ''
+        })
+
+    # Recent overdue tasks
+    overdue_tasks = Task.objects.filter(status__in=['TODO', 'IN_PROGRESS'], due_date__lt=now.date()).order_by('-due_date')[:2]
+    for task in overdue_tasks:
+        activities.append({
+            'icon': 'fa-exclamation',
+            'icon_color': 'warning',
+            'title': f'Task "{task.title}" is overdue',
+            'description': f'Due date was {task.due_date}',
+            'time_ago': timesince(task.due_date, now.date()) + ' ago' if task.due_date else ''
+        })
+
+    # Recent created projects
+    new_projects = Project.objects.order_by('-created_at')[:2]
+    for project in new_projects:
+        activities.append({
+            'icon': 'fa-plus',
+            'icon_color': 'info',
+            'title': f'New project "{project.name}" created',
+            'description': f'Project created',
+            'time_ago': timesince(project.created_at, now) + ' ago' if project.created_at else ''
+        })
+
+    # Recent completed tasks
+    completed_tasks = Task.objects.filter(status='COMPLETED').order_by('-completed_date')[:2]
+    for task in completed_tasks:
+        activities.append({
+            'icon': 'fa-check',
+            'icon_color': 'success',
+            'title': f'Task "{task.title}" completed',
+            'description': f'Completed in project "{task.project.name}"' if task.project else 'Task completed',
+            'time_ago': timesince(task.completed_date, now.date()) + ' ago' if task.completed_date else ''
+        })
+
+    # Sort all activities by their most recent timestamp (descending)
+    def get_time(activity):
+        # Try to get the most recent timestamp from the activity
+        for field in ['updated_at', 'created_at', 'due_date', 'completed_date']:
+            if field in activity and activity[field]:
+                return activity[field]
+        return None
+
+    # Sort by time_ago (most recent first, since timesince returns strings, keep order as appended)
+    # Limit to 5 most recent
+    activities = activities[:5]
+
+    return Response(activities) 

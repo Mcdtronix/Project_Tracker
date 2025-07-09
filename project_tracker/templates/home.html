@@ -76,6 +76,115 @@
     </div>
 </section>
 
+<!-- Dashboard Metric Cards (from dashboard.html) -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Total Projects</h6>
+                        <h2 class="metric-value text-primary" id="totalProjects">0</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="totalProjectsChange">0%</span> from last month
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-project-diagram text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Active Projects</h6>
+                        <h2 class="metric-value text-primary" id="activeProjects">0</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="activeProjectsChange">0%</span> from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-play-circle text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Total Tasks</h6>
+                        <h2 class="metric-value text-primary" id="totalTasks">0</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="totalTasksChange">0%</span> from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-tasks text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="metric-card card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="metric-info">
+                        <h6 class="metric-label text-muted">Completion Rate</h6>
+                        <h2 class="metric-value text-primary" id="completionRate">0%</h2>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i><span id="completionRateChange">0%</span> from last week
+                        </small>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts and Notifications (from dashboard.html) -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Alerts & Notifications
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="alert alert-warning d-flex align-items-center">
+                            <i class="fas fa-clock me-2"></i>
+                            <div>
+                                <strong id="overdueTasks">0</strong> tasks are overdue
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-danger d-flex align-items-center">
+                            <i class="fas fa-calendar-times me-2"></i>
+                            <div>
+                                <strong id="overdueProjects">0</strong> projects are behind schedule
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Quick Actions Section -->
 <section class="quick-actions mb-5">
     <div class="container">
@@ -96,7 +205,7 @@
                         </div>
                         <h5 class="card-title">New Project</h5>
                         <p class="card-text text-muted">Create a new project and start tracking progress</p>
-                        <button class="btn btn-primary w-100" onclick="showQuickModal('project')">
+                        <button class="btn btn-primary w-100" onclick="showCreateProjectModal()">
                             <i class="fas fa-plus me-2"></i>Create Project
                         </button>
                     </div>
@@ -110,7 +219,7 @@
                         </div>
                         <h5 class="card-title">Add Task</h5>
                         <p class="card-text text-muted">Create a new task and assign it to a project</p>
-                        <button class="btn btn-primary w-100" onclick="showQuickModal('task')">
+                        <button class="btn btn-primary w-100" onclick="showCreateTaskModal()">
                             <i class="fas fa-plus me-2"></i>Add Task
                         </button>
                     </div>
@@ -231,47 +340,8 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="activity-timeline">
-                            <div class="activity-item">
-                                <div class="activity-icon bg-success">
-                                    <i class="fas fa-check"></i>
+                            <!-- Content will be dynamically loaded -->
                                 </div>
-                                <div class="activity-content">
-                                    <h6>Project "Website Redesign" completed</h6>
-                                    <p class="text-muted mb-1">All tasks finished ahead of schedule</p>
-                                    <small class="text-muted">2 hours ago</small>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon bg-warning">
-                                    <i class="fas fa-exclamation"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <h6>Task "Database Migration" is overdue</h6>
-                                    <p class="text-muted mb-1">Due date was yesterday</p>
-                                    <small class="text-muted">5 hours ago</small>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon bg-info">
-                                    <i class="fas fa-plus"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <h6>New project "Mobile App" created</h6>
-                                    <p class="text-muted mb-1">Project assigned to Development Team</p>
-                                    <small class="text-muted">1 day ago</small>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon bg-primary">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <h6>Team member John Doe joined</h6>
-                                    <p class="text-muted mb-1">Assigned to 3 active projects</p>
-                                    <small class="text-muted">2 days ago</small>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -280,17 +350,17 @@
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Quick Stats</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" id="quick-stats">
                         <div class="stat-card mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-1">Active Projects</h6>
                                     <small class="text-muted">Currently running</small>
                                 </div>
-                                <div class="stat-number text-primary">12</div>
+                                <div class="stat-number text-primary" id="active-projects-count">0</div>
                             </div>
                             <div class="progress mt-2" style="height: 6px;">
-                                <div class="progress-bar bg-primary" style="width: 75%"></div>
+                                <div class="progress-bar bg-primary" id="active-projects-bar" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="stat-card mb-3">
@@ -299,10 +369,10 @@
                                     <h6 class="mb-1">Completed Tasks</h6>
                                     <small class="text-muted">This week</small>
                                 </div>
-                                <div class="stat-number text-success">45</div>
+                                <div class="stat-number text-success" id="completed-tasks-count">0</div>
                             </div>
                             <div class="progress mt-2" style="height: 6px;">
-                                <div class="progress-bar bg-success" style="width: 90%"></div>
+                                <div class="progress-bar bg-success" id="completed-tasks-bar" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="stat-card mb-3">
@@ -311,10 +381,10 @@
                                     <h6 class="mb-1">Team Members</h6>
                                     <small class="text-muted">Active users</small>
                                 </div>
-                                <div class="stat-number text-info">8</div>
+                                <div class="stat-number text-info" id="team-members-count">0</div>
                             </div>
                             <div class="progress mt-2" style="height: 6px;">
-                                <div class="progress-bar bg-info" style="width: 60%"></div>
+                                <div class="progress-bar bg-info" id="team-members-bar" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -323,10 +393,10 @@
                                     <h6 class="mb-1">Overdue Items</h6>
                                     <small class="text-muted">Needs attention</small>
                                 </div>
-                                <div class="stat-number text-warning">3</div>
+                                <div class="stat-number text-warning" id="overdue-items-count">0</div>
                             </div>
                             <div class="progress mt-2" style="height: 6px;">
-                                <div class="progress-bar bg-warning" style="width: 25%"></div>
+                                <div class="progress-bar bg-warning" id="overdue-items-bar" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
@@ -346,6 +416,152 @@
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Project Modal (copied from projects.html) -->
+<div class="modal fade" id="createProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createProjectForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Project Name</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Priority</label>
+                                <select class="form-select" name="priority">
+                                    <option value="LOW">Low</option>
+                                    <option value="MEDIUM" selected>Medium</option>
+                                    <option value="HIGH">High</option>
+                                    <option value="CRITICAL">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" name="start_date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Estimated Completion</label>
+                                <input type="date" class="form-control" name="estimated_completion_date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Budget</label>
+                        <input type="number" class="form-control" name="budget" step="0.01">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createProject()">Create Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Task Modal (copied from tasks.html) -->
+<div class="modal fade" id="createTaskModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createTaskForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label class="form-label">Task Title</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Priority</label>
+                                <select class="form-select" name="priority">
+                                    <option value="LOW">Low</option>
+                                    <option value="MEDIUM" selected>Medium</option>
+                                    <option value="HIGH">High</option>
+                                    <option value="CRITICAL">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Project</label>
+                                <select class="form-select" name="project" required>
+                                    <option value="">Select Project</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" name="status">
+                                    <option value="TODO" selected>To Do</option>
+                                    <option value="IN_PROGRESS">In Progress</option>
+                                    <option value="REVIEW">Review</option>
+                                    <option value="COMPLETED">Completed</option>
+                                    <option value="BLOCKED">Blocked</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" name="start_date">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Due Date</label>
+                                <input type="date" class="form-control" name="due_date">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Estimated Hours</label>
+                                <input type="number" class="form-control" name="estimated_hours" step="0.5" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="createTask()">Create Task</button>
             </div>
         </div>
     </div>
@@ -710,57 +926,43 @@
 }
 </style>
 
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 // Initialize animations and interactions
-document.addEventListener('DOMContentLoaded', function() {
-    // Animate progress bars
-    const progressBars = document.querySelectorAll('.preview-bar');
-    progressBars.forEach((bar, index) => {
-        setTimeout(() => {
-            bar.style.width = bar.style.width;
-        }, index * 500);
-    });
-
-    // Add scroll animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in-up');
+function loadRecentActivity() {
+    fetch('/api/recent-activity/')
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to fetch activity');
+            return response.json();
+        })
+        .then(data => {
+            const timeline = document.querySelector('.activity-timeline');
+            if (!timeline) return;
+            if (!data.length) {
+                timeline.innerHTML = '<div class="text-center text-muted py-4">No recent activity.</div>';
+                return;
             }
+            timeline.innerHTML = data.map(item => `
+                <div class="activity-item">
+                    <div class="activity-icon bg-${item.icon_color}">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>${item.title}</h6>
+                        <p class="text-muted mb-1">${item.description}</p>
+                        <small class="text-muted">${item.time_ago}</small>
+                    </div>
+                </div>
+            `).join('');
+        })
+        .catch(error => {
+            console.error('Error loading recent activity:', error);
         });
-    }, observerOptions);
+}
 
-    // Observe all cards and sections
-    document.querySelectorAll('.card, .section-title').forEach(el => {
-        observer.observe(el);
-    });
-
-    // Add hover effects to stat cards
-    document.querySelectorAll('.stat-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateX(5px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateX(0) scale(1)';
-        });
-    });
-
-    // Add click effects to action cards
-    document.querySelectorAll('.action-card').forEach(card => {
-        card.addEventListener('click', function() {
-            this.style.transform = 'translateY(-5px) scale(0.98)';
-            setTimeout(() => {
-                this.style.transform = 'translateY(-10px) scale(1)';
-            }, 150);
-        });
-    });
-});
+document.addEventListener('DOMContentLoaded', loadRecentActivity);
+setInterval(loadRecentActivity, 30000);
 
 // Add smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -877,5 +1079,169 @@ function showQuickModal(type) {
     
     modal.show();
 }
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Show create project modal from home page
+function showCreateProjectModal() {
+    const modal = new bootstrap.Modal(document.getElementById('createProjectModal'));
+    modal.show();
+}
+
+// Create new project from home page
+function createProject() {
+    const form = document.getElementById('createProjectForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Show loading state
+    const submitBtn = document.querySelector('#createProjectModal .btn-primary');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Creating...';
+    submitBtn.disabled = true;
+
+    fetch('/api/projects/projects/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Close modal and reset form
+        bootstrap.Modal.getInstance(document.getElementById('createProjectModal')).hide();
+        form.reset();
+        // Optionally reload projects or show success notification
+        if (typeof showNotification === 'function') {
+            showNotification('Project created successfully!', 'success', 3000);
+        }
+    })
+    .catch(error => {
+        console.error('Error creating project:', error);
+        if (typeof showNotification === 'function') {
+            showNotification('Failed to create project. Please try again.', 'error', 5000);
+        }
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+// Show create task modal from home page
+function showCreateTaskModal() {
+    const modal = new bootstrap.Modal(document.getElementById('createTaskModal'));
+    // Load projects for the dropdown
+    fetch('/api/projects/projects/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const allProjects = data.results || data;
+            const select = document.querySelector('#createTaskForm select[name="project"]');
+            if (select) {
+                select.innerHTML = '<option value="">Select Project</option>' +
+                    allProjects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading projects:', error);
+        });
+    modal.show();
+}
+
+// Create new task from home page
+function createTask() {
+    const form = document.getElementById('createTaskForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Show loading state
+    const submitBtn = document.querySelector('#createTaskModal .btn-success');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Creating...';
+    submitBtn.disabled = true;
+
+    fetch('/api/tasks/tasks/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Close modal and reset form
+        bootstrap.Modal.getInstance(document.getElementById('createTaskModal')).hide();
+        form.reset();
+        // Optionally reload tasks or show success notification
+        if (typeof showNotification === 'function') {
+            showNotification('Task created successfully!', 'success', 3000);
+        }
+    })
+    .catch(error => {
+        console.error('Error creating task:', error);
+        if (typeof showNotification === 'function') {
+            showNotification('Failed to create task. Please try again.', 'error', 5000);
+        }
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+function updateDashboardCards(data) {
+    document.getElementById('totalProjects').textContent = data.total_projects;
+    document.getElementById('activeProjects').textContent = data.active_projects;
+    document.getElementById('totalTasks').textContent = data.total_tasks;
+    document.getElementById('completionRate').textContent = (data.task_completion_rate || 0) + '%';
+    document.getElementById('overdueTasks').textContent = data.overdue_tasks || 0;
+    document.getElementById('overdueProjects').textContent = data.overdue_projects || 0;
+}
+
+function loadDashboardData() {
+    fetch('/api/dashboard/data/')
+        .then(response => response.json())
+        .then(result => {
+            if (!result.success) return;
+            const data = result.data;
+            updateDashboardCards(data);
+        })
+        .catch(error => {
+            console.error('Error loading dashboard data:', error);
+        });
+}
+document.addEventListener('DOMContentLoaded', loadDashboardData);
 </script>
 {% endblock %} 
