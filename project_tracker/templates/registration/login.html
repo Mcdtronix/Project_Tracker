@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Project Tracker{% endblock %}
+
+{% block sidebar %}{% endblock %}
+{% block breadcrumb %}{% endblock %}
+{% block show_user_greeting %}false{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="card shadow">
+        <div class="card-body">
+            <h2 class="mb-4 text-center">Login</h2>
+            {% if form.errors %}
+                <div class="alert alert-danger">Invalid username or password.</div>
+            {% endif %}
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Username</label>
+                    {{ form.username }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">Password</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to Project Tracker{% endblock %}
+
+{% block sidebar %}{% endblock %}
+{% block breadcrumb %}{% endblock %}
+{% block show_user_greeting %}false{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <h1 class="display-4 mb-3 animate__animated animate__fadeInDown">Welcome to <span class="text-primary">Project Tracker</span></h1>
+    <p class="lead mb-4 animate__animated animate__fadeInUp">Your all-in-one solution for managing projects, tasks, and teams efficiently.<br>Stay organized, boost productivity, and achieve your goals with ease.</p>
+    <div class="row justify-content-center mb-5 animate__animated animate__fadeInUp animate__delay-1s">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow feature-card hover-shadow">
+                <div class="card-body">
+                    <i class="fas fa-project-diagram fa-3x text-primary mb-3 pulse"></i>
+                    <h5 class="card-title">Project Management</h5>
+                    <p class="card-text">Create, track, and manage multiple projects with real-time updates and progress tracking.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow feature-card hover-shadow">
+                <div class="card-body">
+                    <i class="fas fa-tasks fa-3x text-success mb-3 pulse"></i>
+                    <h5 class="card-title">Task Tracking</h5>
+                    <p class="card-text">Assign, prioritize, and monitor tasks for your team. Never miss a deadline again.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow feature-card hover-shadow">
+                <div class="card-body">
+                    <i class="fas fa-users fa-3x text-info mb-3 pulse"></i>
+                    <h5 class="card-title">Team Collaboration</h5>
+                    <p class="card-text">Collaborate with your team, share updates, and communicate seamlessly within the platform.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'login' %}" class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite">Get Started &nbsp;<i class="fas fa-arrow-right"></i></a>
+</div>
+
+<!-- Animate.css CDN for simple animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<style>
+.feature-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 1rem;
+}
+.feature-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.pulse {
+    animation: pulse 2s infinite;
+}
+@media (max-width: 768px) {
+    .display-4 { font-size: 2.2rem; }
+    .feature-card { margin-bottom: 1.5rem; }
+}
+</style>
+{% endblock %} 

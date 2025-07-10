@@ -22,6 +22,8 @@ from drf_yasg import openapi
 from django.views.generic import TemplateView
 from rest_framework import permissions
 from . import views
+from django.contrib.auth import views as auth_views
+from .views import landing
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -37,6 +39,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path('', landing, name='landing'),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='landing'), name='logout'),
     # Home page
     path('', views.home, name='home'),
     

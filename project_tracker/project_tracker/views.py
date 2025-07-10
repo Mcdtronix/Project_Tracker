@@ -13,11 +13,17 @@ from django.utils.timesince import timesince
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from projects.models import Project
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
     """Home page view"""
     return render(request, 'home.html')
 
+def landing(request):
+    return render(request, 'landing.html')
+
+@login_required
 def dashboard(request):
     """Interactive dashboard with real-time data and charts"""
     try:
@@ -128,30 +134,37 @@ def dashboard(request):
         }
         return render(request, 'dashboard.html', context)
 
+@login_required
 def projects(request):
     """Projects page view"""
     return render(request, 'projects.html')
 
+@login_required
 def tasks(request):
     """Tasks page view"""
     return render(request, 'tasks.html')
 
+@login_required
 def reports(request):
     """Reports page view"""
     return render(request, 'reports.html')
 
+@login_required
 def calendar(request):
     """Calendar page view"""
     return render(request, 'calendar.html')
 
+@login_required
 def team(request):
     """Team page view"""
     return render(request, 'team.html')
 
+@login_required
 def settings(request):
     """Settings page view"""
     return render(request, 'settings.html')
 
+@login_required
 def project_detail(request, project_id):
     """Project detail page view"""
     project = get_object_or_404(Project, id=project_id)
@@ -159,6 +172,7 @@ def project_detail(request, project_id):
 
 @csrf_exempt
 @require_http_methods(["GET"])
+@login_required
 def dashboard_data(request):
     """API endpoint for dashboard data updates"""
     try:
@@ -230,6 +244,7 @@ def dashboard_data(request):
     return JsonResponse({'error': 'Invalid request method'}, status=400)
     
 @api_view(['GET'])
+@login_required
 def recent_activity(request):
     activities = []
     now = timezone.now()
