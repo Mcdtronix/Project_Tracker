@@ -16,27 +16,472 @@
                 <i class="fas fa-cog text-primary me-3"></i>
                 Settings
             </h1>
-            <p class="text-muted">Configure your project tracker preferences.</p>
+            <p class="text-muted">Configure your project tracker preferences and account settings.</p>
         </div>
         <div class="col-md-4 text-end">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="saveAllSettings()">
                 <i class="fas fa-save me-2"></i>Save Changes
             </button>
         </div>
     </div>
 </div>
 
-<div class="row">
+<!-- Settings Navigation -->
+<div class="row mb-4">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Application Settings</h5>
+            <div class="card-body p-0">
+                <ul class="nav nav-tabs nav-fill" id="settingsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab">
+                            <i class="fas fa-user me-2"></i>Profile
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab">
+                            <i class="fas fa-project-diagram me-2"></i>Projects
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button" role="tab">
+                            <i class="fas fa-cogs me-2"></i>System
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">
+                            <i class="fas fa-shield-alt me-2"></i>Security
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <div class="card-body">
-                <div class="text-center py-5">
-                    <i class="fas fa-cog fa-3x text-muted mb-3"></i>
-                    <h4 class="text-muted">Settings Panel</h4>
-                    <p class="text-muted">This page will display application settings and configuration options.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Content -->
+<div class="tab-content" id="settingsTabContent">
+    <!-- Profile Settings -->
+    <div class="tab-pane fade show active" id="profile" role="tabpanel">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-user me-2"></i>Profile Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="profileForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" name="first_name" value="John">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" name="last_name" value="Doe">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" name="email" value="john.doe@example.com">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" name="username" value="johndoe" readonly>
+                                <small class="text-muted">Username cannot be changed</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-control" name="job_title" value="Project Manager">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-control" name="bio" rows="3" placeholder="Tell us about yourself...">Experienced project manager with 5+ years in software development.</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Time Zone</label>
+                                <select class="form-select" name="timezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="EST" selected>Eastern Time (EST)</option>
+                                    <option value="PST">Pacific Time (PST)</option>
+                                    <option value="GMT">Greenwich Mean Time (GMT)</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-image me-2"></i>Profile Picture</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="profile-avatar mb-3">
+                            <img src="https://via.placeholder.com/150" alt="Profile" class="rounded-circle" id="profileImage">
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm" onclick="document.getElementById('avatarInput').click()">
+                            <i class="fas fa-camera me-2"></i>Change Photo
+                        </button>
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Settings -->
+    <div class="tab-pane fade" id="notifications" role="tabpanel">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-bell me-2"></i>Notification Preferences</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Email Notifications</h6>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="emailTaskUpdates" checked>
+                                        <label class="form-check-label" for="emailTaskUpdates">
+                                            Task updates and assignments
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="emailProjectUpdates" checked>
+                                        <label class="form-check-label" for="emailProjectUpdates">
+                                            Project status changes
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="emailDeadlines" checked>
+                                        <label class="form-check-label" for="emailDeadlines">
+                                            Deadline reminders
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="emailWeekly" checked>
+                                        <label class="form-check-label" for="emailWeekly">
+                                            Weekly progress reports
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-3">In-App Notifications</h6>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="inAppTaskUpdates" checked>
+                                        <label class="form-check-label" for="inAppTaskUpdates">
+                                            Task updates and assignments
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="inAppProjectUpdates" checked>
+                                        <label class="form-check-label" for="inAppProjectUpdates">
+                                            Project status changes
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="inAppDeadlines" checked>
+                                        <label class="form-check-label" for="inAppDeadlines">
+                                            Deadline reminders
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="inAppTeamUpdates">
+                                        <label class="form-check-label" for="inAppTeamUpdates">
+                                            Team member updates
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Notification Frequency</label>
+                                <select class="form-select" id="notificationFrequency">
+                                    <option value="immediate">Immediate</option>
+                                    <option value="hourly" selected>Hourly</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Quiet Hours</label>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="time" class="form-control" value="22:00" id="quietStart">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="time" class="form-control" value="08:00" id="quietEnd">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Settings -->
+    <div class="tab-pane fade" id="projects" role="tabpanel">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-project-diagram me-2"></i>Project Defaults</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Default Project Status</label>
+                                    <select class="form-select" id="defaultProjectStatus">
+                                        <option value="PLANNING">Planning</option>
+                                        <option value="IN_PROGRESS" selected>In Progress</option>
+                                        <option value="ON_HOLD">On Hold</option>
+                                        <option value="COMPLETED">Completed</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Default Priority</label>
+                                    <select class="form-select" id="defaultPriority">
+                                        <option value="LOW">Low</option>
+                                        <option value="MEDIUM" selected>Medium</option>
+                                        <option value="HIGH">High</option>
+                                        <option value="CRITICAL">Critical</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Default Task Status</label>
+                                    <select class="form-select" id="defaultTaskStatus">
+                                        <option value="TODO" selected>To Do</option>
+                                        <option value="IN_PROGRESS">In Progress</option>
+                                        <option value="REVIEW">Review</option>
+                                        <option value="COMPLETED">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Auto-assign tasks to creator</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="autoAssignTasks" checked>
+                                        <label class="form-check-label" for="autoAssignTasks">
+                                            Automatically assign new tasks to the creator
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Show completed tasks</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="showCompletedTasks" checked>
+                                        <label class="form-check-label" for="showCompletedTasks">
+                                            Display completed tasks in project views
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Enable project templates</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="enableTemplates">
+                                        <label class="form-check-label" for="enableTemplates">
+                                            Use project templates for new projects
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Settings -->
+    <div class="tab-pane fade" id="system" role="tabpanel">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-cogs me-2"></i>System Preferences</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Display Settings</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Theme</label>
+                                    <select class="form-select" id="theme">
+                                        <option value="light" selected>Light</option>
+                                        <option value="dark">Dark</option>
+                                        <option value="auto">Auto (System)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Language</label>
+                                    <select class="form-select" id="language">
+                                        <option value="en" selected>English</option>
+                                        <option value="es">Español</option>
+                                        <option value="fr">Français</option>
+                                        <option value="de">Deutsch</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date Format</label>
+                                    <select class="form-select" id="dateFormat">
+                                        <option value="MM/DD/YYYY" selected>MM/DD/YYYY</option>
+                                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Performance</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Auto-refresh interval</label>
+                                    <select class="form-select" id="refreshInterval">
+                                        <option value="30">30 seconds</option>
+                                        <option value="60" selected>1 minute</option>
+                                        <option value="300">5 minutes</option>
+                                        <option value="0">Manual only</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Items per page</label>
+                                    <select class="form-select" id="itemsPerPage">
+                                        <option value="10">10</option>
+                                        <option value="25" selected>25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Enable animations</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="enableAnimations" checked>
+                                        <label class="form-check-label" for="enableAnimations">
+                                            Show UI animations and transitions
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Settings -->
+    <div class="tab-pane fade" id="security" role="tabpanel">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Security Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="passwordForm">
+                            <div class="mb-3">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-control" name="current_password">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">New Password</label>
+                                <input type="password" class="form-control" name="new_password">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" name="confirm_password">
+                            </div>
+                            <button type="button" class="btn btn-warning" onclick="changePassword()">
+                                <i class="fas fa-key me-2"></i>Change Password
+                            </button>
+                        </form>
+                        <hr>
+                        <h6 class="mb-3">Two-Factor Authentication</h6>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="twoFactorAuth">
+                                <label class="form-check-label" for="twoFactorAuth">
+                                    Enable two-factor authentication
+                                </label>
+                            </div>
+                            <small class="text-muted">Add an extra layer of security to your account</small>
+                        </div>
+                        <hr>
+                        <h6 class="mb-3">Session Management</h6>
+                        <div class="mb-3">
+                            <button class="btn btn-outline-danger" onclick="logoutAllDevices()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout from all devices
+                            </button>
+                            <small class="text-muted d-block mt-2">This will sign you out from all devices except this one</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-item mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon bg-success">
+                                    <i class="fas fa-sign-in-alt text-white"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <small class="text-muted">2 hours ago</small>
+                                    <div>Login from Chrome on Windows</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-item mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon bg-info">
+                                    <i class="fas fa-edit text-white"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <small class="text-muted">1 day ago</small>
+                                    <div>Updated profile settings</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon bg-warning">
+                                    <i class="fas fa-key text-white"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <small class="text-muted">3 days ago</small>
+                                    <div>Password changed</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,6 +503,58 @@
     margin-bottom: 0.5rem;
 }
 
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    transition: all 0.3s ease;
+    background-color:#81bef3;
+    border-radius: 0.375rem 0.375rem 0 0;
+    margin-right: 0.25rem;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #495057;
+    background-color:white;
+    transform: translateY(-1px);
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background-color:#495057;
+    border-bottom: 3px solid #0d6efd;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.profile-avatar img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 4px solid #e9ecef;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
 @media (max-width: 768px) {
     .settings-header {
         padding: 1.5rem;
@@ -67,6 +564,199 @@
     .settings-title {
         font-size: 2rem;
     }
+    
+    .nav-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
 }
 </style>
+
+<script>
+// Load settings on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadSettings();
+});
+
+// Load user settings
+function loadSettings() {
+    // In a real app, you'd fetch settings from the API
+    console.log('Loading settings...');
+    
+    // Simulate loading settings
+    setTimeout(() => {
+        // Profile settings would be loaded from user data
+        // Notification settings would be loaded from user preferences
+        // etc.
+    }, 500);
+}
+
+// Save all settings
+function saveAllSettings() {
+    const submitBtn = document.querySelector('.btn-primary');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+    submitBtn.disabled = true;
+    
+    // Collect all settings
+    const settings = {
+        profile: collectProfileSettings(),
+        notifications: collectNotificationSettings(),
+        projects: collectProjectSettings(),
+        system: collectSystemSettings(),
+        security: collectSecuritySettings()
+    };
+    
+    console.log('Saving settings:', settings);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Show success notification
+        if (typeof showNotification === 'function') {
+            showNotification('Settings saved successfully!', 'success', 3000);
+        }
+        
+        // Reset button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 1500);
+}
+
+// Collect profile settings
+function collectProfileSettings() {
+    const form = document.getElementById('profileForm');
+    const formData = new FormData(form);
+    return Object.fromEntries(formData.entries());
+}
+
+// Collect notification settings
+function collectNotificationSettings() {
+    return {
+        emailTaskUpdates: document.getElementById('emailTaskUpdates').checked,
+        emailProjectUpdates: document.getElementById('emailProjectUpdates').checked,
+        emailDeadlines: document.getElementById('emailDeadlines').checked,
+        emailWeekly: document.getElementById('emailWeekly').checked,
+        inAppTaskUpdates: document.getElementById('inAppTaskUpdates').checked,
+        inAppProjectUpdates: document.getElementById('inAppProjectUpdates').checked,
+        inAppDeadlines: document.getElementById('inAppDeadlines').checked,
+        inAppTeamUpdates: document.getElementById('inAppTeamUpdates').checked,
+        frequency: document.getElementById('notificationFrequency').value,
+        quietStart: document.getElementById('quietStart').value,
+        quietEnd: document.getElementById('quietEnd').value
+    };
+}
+
+// Collect project settings
+function collectProjectSettings() {
+    return {
+        defaultProjectStatus: document.getElementById('defaultProjectStatus').value,
+        defaultPriority: document.getElementById('defaultPriority').value,
+        defaultTaskStatus: document.getElementById('defaultTaskStatus').value,
+        autoAssignTasks: document.getElementById('autoAssignTasks').checked,
+        showCompletedTasks: document.getElementById('showCompletedTasks').checked,
+        enableTemplates: document.getElementById('enableTemplates').checked
+    };
+}
+
+// Collect system settings
+function collectSystemSettings() {
+    return {
+        theme: document.getElementById('theme').value,
+        language: document.getElementById('language').value,
+        dateFormat: document.getElementById('dateFormat').value,
+        refreshInterval: document.getElementById('refreshInterval').value,
+        itemsPerPage: document.getElementById('itemsPerPage').value,
+        enableAnimations: document.getElementById('enableAnimations').checked
+    };
+}
+
+// Collect security settings
+function collectSecuritySettings() {
+    return {
+        twoFactorAuth: document.getElementById('twoFactorAuth').checked
+    };
+}
+
+// Preview profile image
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profileImage').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Change password
+function changePassword() {
+    const form = document.getElementById('passwordForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    if (!data.current_password || !data.new_password || !data.confirm_password) {
+        if (typeof showNotification === 'function') {
+            showNotification('Please fill in all password fields', 'error', 3000);
+        }
+        return;
+    }
+    
+    if (data.new_password !== data.confirm_password) {
+        if (typeof showNotification === 'function') {
+            showNotification('New passwords do not match', 'error', 3000);
+        }
+        return;
+    }
+    
+    console.log('Changing password...');
+    
+    // Simulate API call
+    setTimeout(() => {
+        form.reset();
+        if (typeof showNotification === 'function') {
+            showNotification('Password changed successfully!', 'success', 3000);
+        }
+    }, 1000);
+}
+
+// Logout from all devices
+function logoutAllDevices() {
+    if (!confirm('Are you sure you want to logout from all devices? This will sign you out from all devices except this one.')) {
+        return;
+    }
+    
+    console.log('Logging out from all devices...');
+    
+    // Simulate API call
+    setTimeout(() => {
+        if (typeof showNotification === 'function') {
+            showNotification('Logged out from all devices successfully!', 'success', 3000);
+        }
+    }, 1000);
+}
+
+// Theme change handler
+document.getElementById('theme').addEventListener('change', function() {
+    const theme = this.value;
+    console.log('Theme changed to:', theme);
+    
+    // In a real app, you'd apply the theme immediately
+    if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+    }
+});
+
+// Auto-save settings on change
+document.addEventListener('change', function(e) {
+    if (e.target.matches('input, select, textarea')) {
+        // Debounce auto-save
+        clearTimeout(window.autoSaveTimeout);
+        window.autoSaveTimeout = setTimeout(() => {
+            console.log('Auto-saving settings...');
+        }, 2000);
+    }
+});
+</script>
 {% endblock %} 
