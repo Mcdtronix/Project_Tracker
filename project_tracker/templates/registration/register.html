@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Project Tracker{% endblock %}
+
+{% block sidebar %}{% endblock %}
+{% block breadcrumb %}{% endblock %}
+{% block show_user_greeting %}false{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header bg-success text-white text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Create Account
+                    </h3>
+                    <p class="mb-0 mt-2">Join Project Tracker and start managing your projects</p>
+                </div>
+                <div class="card-body p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" novalidate id="registrationForm">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                    <i class="fas fa-user me-2"></i>First Name
+                                </label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.first_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Last Name
+                                </label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.last_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                <i class="fas fa-at me-2"></i>Username
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.username.help_text %}
+                                <div class="form-text">{{ form.username.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Email Address
+                            </label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.password1.id_for_label }}" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.password1.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.password1.help_text %}
+                                <div class="form-text">{{ form.password1.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.password2.id_for_label }}" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Confirm Password
+                            </label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.password2.help_text %}
+                                <div class="form-text">{{ form.password2.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg" id="submitBtn">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Create Account
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Password strength indicator -->
+                    <div class="mt-3">
+                        <div class="password-strength">
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" id="passwordStrength" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted" id="passwordStrengthText">Password strength: Weak</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center py-3 bg-light">
+                    <div class="small">
+                        Already have an account? 
+                        <a href="{% url 'users:login' %}" class="text-decoration-none">
+                            <i class="fas fa-sign-in-alt me-1"></i>Sign in here
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'landing' %}" class="text-muted text-decoration-none">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.form-control {
+    border-radius: 0.5rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.btn-success {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.alert {
+    border-radius: 0.5rem;
+    border: none;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.password-strength {
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    transition: all 0.3s ease;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registrationForm');
+    const password1 = document.getElementById('{{ form.password1.id_for_label }}');
+    const password2 = document.getElementById('{{ form.password2.id_for_label }}');
+    const submitBtn = document.getElementById('submitBtn');
+    const strengthBar = document.getElementById('passwordStrength');
+    const strengthText = document.getElementById('passwordStrengthText');
+    
+    // Password strength checker
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        let feedback = [];
+        
+        if (password.length >= 8) strength += 25;
+        else feedback.push('At least 8 characters');
+        
+        if (/[A-Z]/.test(password)) strength += 25;
+        else feedback.push('One uppercase letter');
+        
+        if (/[a-z]/.test(password)) strength += 25;
+        else feedback.push('One lowercase letter');
+        
+        if (/\d/.test(password)) strength += 25;
+        else feedback.push('One number');
+        
+        // Update strength indicator
+        strengthBar.style.width = strength + '%';
+        
+        if (strength <= 25) {
+            strengthBar.className = 'progress-bar bg-danger';
+            strengthText.textContent = 'Password strength: Weak';
+        } else if (strength <= 50) {
+            strengthBar.className = 'progress-bar bg-warning';
+            strengthText.textContent = 'Password strength: Fair';
+        } else if (strength <= 75) {
+            strengthBar.className = 'progress-bar bg-info';
+            strengthText.textContent = 'Password strength: Good';
+        } else {
+            strengthBar.className = 'progress-bar bg-success';
+            strengthText.textContent = 'Password strength: Strong';
+        }
+        
+        return { strength, feedback };
+    }
+    
+    // Real-time password strength checking
+    password1.addEventListener('input', function() {
+        checkPasswordStrength(this.value);
+    });
+    
+    // Password confirmation check
+    password2.addEventListener('input', function() {
+        if (password1.value !== this.value) {
+            this.setCustomValidity('Passwords do not match');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+    
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Check password strength
+        const strength = checkPasswordStrength(password1.value);
+        if (strength.strength < 75) {
+            e.preventDefault();
+            alert('Please choose a stronger password. Your password should include uppercase, lowercase, numbers, and be at least 8 characters long.');
+            isValid = false;
+        }
+        
+        // Check if passwords match
+        if (password1.value !== password2.value) {
+            e.preventDefault();
+            alert('Passwords do not match. Please make sure both passwords are identical.');
+            isValid = false;
+        }
+        
+        // Check username
+        const username = document.getElementById('{{ form.username.id_for_label }}');
+        if (username.value.length < 3) {
+            e.preventDefault();
+            alert('Username must be at least 3 characters long.');
+            isValid = false;
+        }
+        
+        if (!/^[a-zA-Z0-9_]+$/.test(username.value)) {
+            e.preventDefault();
+            alert('Username can only contain letters, numbers, and underscores.');
+            isValid = false;
+        }
+        
+        // Check names
+        const firstName = document.getElementById('{{ form.first_name.id_for_label }}');
+        const lastName = document.getElementById('{{ form.last_name.id_for_label }}');
+        
+        if (!/^[A-Za-z\s]+$/.test(firstName.value)) {
+            e.preventDefault();
+            alert('First name can only contain letters and spaces.');
+            isValid = false;
+        }
+        
+        if (!/^[A-Za-z\s]+$/.test(lastName.value)) {
+            e.preventDefault();
+            alert('Last name can only contain letters and spaces.');
+            isValid = false;
+        }
+        
+        if (isValid) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Account...';
+        }
+    });
+    
+    // Real-time validation feedback
+    const inputs = form.querySelectorAll('input[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

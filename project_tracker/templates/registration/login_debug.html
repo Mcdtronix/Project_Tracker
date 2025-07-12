@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Login - Project Tracker{% endblock %}
+{% block title %}Login Debug - Project Tracker{% endblock %}
 
 {% block sidebar %}{% endblock %}
 {% block breadcrumb %}{% endblock %}
@@ -11,14 +11,19 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-lg border-0 rounded-lg mt-5">
-                <div class="card-header bg-primary text-white text-center py-4">
+                <div class="card-header bg-warning text-dark text-center py-4">
                     <h3 class="mb-0">
-                        <i class="fas fa-sign-in-alt me-2"></i>
-                        Welcome Back
+                        <i class="fas fa-bug me-2"></i>
+                        Login Debug Mode
                     </h3>
-                    <p class="mb-0 mt-2">Sign in to your Project Tracker account</p>
+                    <p class="mb-0 mt-2">Testing frontend-backend interaction</p>
                 </div>
                 <div class="card-body p-4">
+                    <div id="debug-info" class="alert alert-info">
+                        <strong>Debug Info:</strong>
+                        <div id="debug-content">Ready to test...</div>
+                    </div>
+
                     {% if messages %}
                         {% for message in messages %}
                             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -68,27 +73,20 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <button type="submit" class="btn btn-warning btn-lg" id="submitBtn">
                                 <i class="fas fa-sign-in-alt me-2"></i>
-                                Sign In
+                                Test Login
                             </button>
                         </div>
                     </form>
                 </div>
                 <div class="card-footer text-center py-3 bg-light">
                     <div class="small">
-                        Don't have an account? 
-                        <a href="{% url 'users:register' %}" class="text-decoration-none">
-                            <i class="fas fa-user-plus me-1"></i>Sign up here
+                        <a href="{% url 'users:login' %}" class="text-decoration-none">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Normal Login
                         </a>
                     </div>
                 </div>
-            </div>
-            
-            <div class="text-center mt-4">
-                <a href="{% url 'landing' %}" class="text-muted text-decoration-none">
-                    <i class="fas fa-arrow-left me-1"></i>Back to Home
-                </a>
             </div>
         </div>
     </div>
@@ -101,7 +99,7 @@
 }
 
 .card-header {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
 }
 
 .form-control {
@@ -111,20 +109,20 @@
 }
 
 .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
 }
 
-.btn-primary {
+.btn-warning {
     border-radius: 0.5rem;
     padding: 0.75rem 1.5rem;
     font-weight: 600;
     transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
+.btn-warning:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
 }
 
 .alert {
@@ -137,17 +135,70 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('loginForm');
     const submitBtn = document.getElementById('submitBtn');
+    const debugContent = document.getElementById('debug-content');
     
-    // Simple form submission handler - no validation blocking
+    // Debug function
+    function updateDebug(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        debugContent.innerHTML += `<br>[${timestamp}] ${message}`;
+        console.log(`[${timestamp}] ${message}`);
+    }
+    
+    updateDebug('Page loaded, form ready');
+    
+    // Log form details
+    updateDebug(`Form action: ${form.action}`);
+    updateDebug(`Form method: ${form.method}`);
+    updateDebug(`CSRF token present: ${form.querySelector('[name=csrfmiddlewaretoken]') ? 'Yes' : 'No'}`);
+    
+    // Form submission handler
     form.addEventListener('submit', function(e) {
-        console.log('Form submitting...');
+        updateDebug('Form submission started');
+        
+        const username = document.getElementById('{{ form.username.id_for_label }}');
+        const password = document.getElementById('{{ form.password.id_for_label }}');
+        
+        updateDebug(`Username field ID: ${username.id}`);
+        updateDebug(`Password field ID: ${password.id}`);
+        updateDebug(`Username value: ${username.value}`);
+        updateDebug(`Password value: ${password.value ? '***' : 'empty'}`);
+        
+        // Don't prevent default - let it submit
+        updateDebug('Allowing form submission...');
         
         // Show loading state
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing In...';
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Testing...';
         
-        // Let the form submit normally
+        updateDebug('Form submitted to backend');
     });
+    
+    // Input change handlers
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            updateDebug(`Input changed: ${this.name} = ${this.value ? '***' : 'empty'}`);
+        });
+        
+        input.addEventListener('blur', function() {
+            updateDebug(`Input blurred: ${this.name}`);
+        });
+    });
+    
+    // Test button to check form data
+    const testBtn = document.createElement('button');
+    testBtn.type = 'button';
+    testBtn.className = 'btn btn-info btn-sm mt-2';
+    testBtn.innerHTML = '<i class="fas fa-info-circle me-1"></i>Check Form Data';
+    testBtn.onclick = function() {
+        const formData = new FormData(form);
+        updateDebug('Form data check:');
+        for (let [key, value] of formData.entries()) {
+            updateDebug(`  ${key}: ${key.includes('password') ? '***' : value}`);
+        }
+    };
+    
+    document.querySelector('.card-body').appendChild(testBtn);
 });
 </script>
 {% endblock %} 

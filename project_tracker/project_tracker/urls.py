@@ -40,10 +40,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', landing, name='landing'),
-    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='landing'), name='logout'),
+    # User authentication URLs
+    path('users/', include('users.urls')),
     # Home page
-    path('', views.home, name='home'),
+    path('home/', views.home, name='home'),
     
     # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),

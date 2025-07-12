@@ -164,5 +164,5 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/dashboard/'  # Change to your main page after login
+LOGIN_URL = '/users/login/'
+LOGIN_REDIRECT_URL = '/home/'  # Redirect to project tracker home page after login
