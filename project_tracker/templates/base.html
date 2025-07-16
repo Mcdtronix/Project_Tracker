@@ -876,7 +876,7 @@
             setTimeout(() => {
                 notification.style.transform = 'translateX(100%)';
                 setTimeout(() => {
-                    if (document.body.contains(notification)) {
+                    if (notification && document.body.contains(notification)) {
                         document.body.removeChild(notification);
                     }
                 }, 300);

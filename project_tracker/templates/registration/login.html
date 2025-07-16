@@ -2,7 +2,12 @@
 
 {% block title %}Login - Project Tracker{% endblock %}
 
-{% block sidebar %}{% endblock %}
+{% block sidebar %}
+<style>
+  #sidebar { display: none !important; }
+</style>
+{{ block.super }}
+{% endblock %}
 {% block breadcrumb %}{% endblock %}
 {% block show_user_greeting %}false{% endblock %}
 

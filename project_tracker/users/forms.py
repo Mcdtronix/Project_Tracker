@@ -38,7 +38,6 @@ class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(
         max_length=30,
         required=True,
-        validators=[name_validator],
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Enter your first name',
@@ -54,7 +53,6 @@ class CustomUserCreationForm(UserCreationForm):
     last_name = forms.CharField(
         max_length=30,
         required=True,
-        validators=[name_validator],
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Enter your last name',
@@ -78,7 +76,7 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['username'] = forms.CharField(
             max_length=150,
             required=True,
-            validators=[username_validator],
+            validators=[self.__class__.username_validator],
             widget=forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Choose a username (letters, numbers, underscores only)',

@@ -53,10 +53,20 @@ class CustomLoginView(LoginView):
     template_name = 'registration/login.html'
     redirect_authenticated_user = True
     
-    def get_success_url(self):
-        return reverse_lazy('home')
-    
+    def dispatch(self, request, *args, **kwargs):
+        print(f"[LOGIN DEBUG] Request method: {request.method}, User authenticated: {request.user.is_authenticated}")
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        print(f"[LOGIN DEBUG] POST data: {request.POST}")
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        print(f"[LOGIN DEBUG] Form is valid. User: {form.get_user()}")
+        return super().form_valid(form)
+
     def form_invalid(self, form):
+        print(f"[LOGIN DEBUG] Form is invalid. Errors: {form.errors}")
         # Enhanced error handling
         error_count = len(form.errors)
         if error_count == 1:
