@@ -57,7 +57,6 @@
             border-bottom: 1px solid #495057;
             z-index: 1030 !important;
             transition: all var(--transition-speed) ease;
-           
         }
 
         .navbar-brand {
@@ -821,7 +820,7 @@
         });
 
         // Add loading states to buttons
-        document.querySelectorAll('.btn').forEach(button => {
+   /*     document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('click', function() {
                 if (!this.classList.contains('btn-loading')) {
                     const originalText = this.innerHTML;
@@ -838,6 +837,7 @@
                 }
             });
         });
+        */
 
         // Notification system
         function showNotification(message, type = 'success', duration = 3000) {
