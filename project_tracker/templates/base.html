@@ -53,8 +53,8 @@
         .navbar {
             height: var(--navbar-height);
             box-shadow: 0 2px 10px rgba(0,0,0,.1);
-            background: #343a40 !important;
-            border-bottom: 1px solid #495057;
+            background: #495057;
+            border-bottom: 1px solid #6c757d;
             z-index: 1030 !important;
             transition: all var(--transition-speed) ease;
         }
@@ -92,13 +92,13 @@
             position: fixed;
             top: var(--navbar-height);
             left: 0;
-            height: calc(100vh - var(--navbar-height));
+            height: calc(100vh - var(--navbar-height) - var(--footer-height)); /* Prevent overlap with footer */
             background: #495057 !important;
             border-right: 1px solid #6c757d;
             padding: 1.5rem 1rem;
             overflow-y: auto;
             transition: all var(--transition-speed) ease;
-            z-index: 1020;
+            z-index: 1000; /* Lower than footer */
             box-shadow: 2px 0 10px rgba(0,0,0,.1);
         }
 
@@ -127,24 +127,36 @@
             background-color: #f8f9fa;
             transition: all var(--transition-speed) ease;
             flex: 1 0 auto;
+            padding-bottom: var(--footer-height); /* Prevent content from being hidden behind fixed footer */
         }
 
         /* Footer Styles */
         .footer {
             flex-shrink: 0;
             height: var(--footer-height);
-            background: #343a40 !important;
-            border-top: 1px solid #495057;
+            background: #495057;
+            border-top: 1px solid #6c757d;
             width: 100%;
             margin-left: 0;
             transition: all var(--transition-speed) ease;
-            position: relative;
+            position: fixed;
             left: 0;
+            bottom: 0;
+            z-index: 1050;
+            /* Sticky footer via flexbox, no position needed */
+        }
+        /* Responsive: Remove margin-left if no-sidebar is present */
+        .no-sidebar .main-content,
+        .no-sidebar .footer {
+            margin-left: 0 !important;
         }
         @media (max-width: 768px) {
             .footer {
                 margin-left: 0;
                 width: 100%;
+            }
+            .sidebar {
+                height: calc(100vh - var(--navbar-height)); /* On mobile, sidebar can be full height */
             }
         }
 
@@ -506,7 +518,7 @@
         }
     </style>
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <!-- Backdrop for mobile sidebar -->
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
@@ -549,11 +561,14 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" title="Notifications">
+                        <li class="nav-item dropdown" id="notificationDropdown">
+                            <a class="nav-link position-relative" href="#" id="navbarNotification" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
                                 <i class="fas fa-bell"></i>
-                                <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill" style="font-size: 0.6rem;">3</span>
+                                <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill" id="notification-badge" style="font-size: 0.6rem;">0</span>
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarNotification" id="notification-list" style="min-width: 300px; max-width: 400px;">
+                                <li class="dropdown-item text-center text-muted">Loading...</li>
+                            </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
@@ -926,6 +941,59 @@
                 showNotification('Please fill in all fields.', 'error', 3000);
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbarNotifications();
+        });
+
+        function loadNavbarNotifications() {
+            fetch('/users/api/users/notifications/', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('notification-list');
+                const badge = document.getElementById('notification-badge');
+                if (!Array.isArray(data) || data.length === 0) {
+                    list.innerHTML = '<li class="dropdown-item text-center text-muted">No notifications</li>';
+                    badge.textContent = '0';
+                    badge.style.display = 'none';
+                    return;
+                }
+                let unreadCount = 0;
+                list.innerHTML = data.map(notif => {
+                    if (!notif.is_read) unreadCount++;
+                    return `<li class="dropdown-item d-flex justify-content-between align-items-center${notif.is_read ? ' text-muted' : ''}">
+                        <span>${notif.message}</span>
+                        ${!notif.is_read ? `<button class="btn btn-sm btn-link text-success p-0 ms-2" onclick="markNotificationRead(${notif.id}, this)"><i class="fas fa-check"></i></button>` : ''}
+                    </li>`;
+                }).join('');
+                badge.textContent = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+            })
+            .catch(error => {
+                document.getElementById('notification-list').innerHTML = '<li class="dropdown-item text-center text-danger">Error loading notifications</li>';
+                document.getElementById('notification-badge').style.display = 'none';
+            });
+        }
+
+        function markNotificationRead(id, btn) {
+            fetch(`/users/api/users/notifications/${id}/read/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    btn.closest('li').classList.add('text-muted');
+                    btn.remove();
+                    loadNavbarNotifications();
+                }
+            });
+        }
     </script>
 </body>
 </html> 

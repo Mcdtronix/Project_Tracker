@@ -7,6 +7,20 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from rest_framework import generics, permissions
+from .models import UserSettings
+from .serializers import UserSettingsSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from projects.models import Project
+from tasks.models import Task
+from .models import UserNotification
+from .serializers import UserNotificationSerializer
+from rest_framework import generics
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+from django.utils import timezone
 
 def register(request):
     """
@@ -177,3 +191,53 @@ def login_debug(request):
         form = CustomAuthenticationForm()
     
     return render(request, 'registration/login_debug.html', {'form': form})
+
+class UserSettingsView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSettingsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        settings, created = UserSettings.objects.get_or_create(user=self.request.user)
+        return settings
+
+class UserQuickStatsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        total_projects = Project.objects.filter(team_members=user).count()
+        active_projects = Project.objects.filter(team_members=user, status='IN_PROGRESS').count()
+        completed_projects = Project.objects.filter(team_members=user, status='COMPLETED').count()
+        total_tasks = Task.objects.filter(project__team_members=user).count()
+        completed_tasks = Task.objects.filter(project__team_members=user, status='COMPLETED').count()
+        return Response({
+            'total_projects': total_projects,
+            'active_projects': active_projects,
+            'completed_projects': completed_projects,
+            'total_tasks': total_tasks,
+            'completed_tasks': completed_tasks,
+        })
+
+class UserNotificationListView(generics.ListAPIView):
+    serializer_class = UserNotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        user = self.request.user
+        # Check for overdue tasks and create a notification if needed
+        overdue_tasks = Task.objects.filter(project__team_members=user, due_date__lt=timezone.now().date(), status__in=['TODO', 'IN_PROGRESS', 'REVIEW', 'BLOCKED'])
+        if overdue_tasks.exists():
+            message = f"You have {overdue_tasks.count()} overdue task{'s' if overdue_tasks.count() != 1 else ''}."
+            # Only create a new notification if one doesn't already exist and is unread
+            if not UserNotification.objects.filter(user=user, message=message, is_read=False).exists():
+                UserNotification.objects.create(user=user, message=message)
+        return UserNotification.objects.filter(user=user).order_by('-created_at')
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_notification_read(request, pk):
+    try:
+        notif = UserNotification.objects.get(pk=pk, user=request.user)
+        notif.is_read = True
+        notif.save()
+        return Response({'success': True})
+    except UserNotification.DoesNotExist:
+        return Response({'error': 'Notification not found'}, status=status.HTTP_404_NOT_FOUND)

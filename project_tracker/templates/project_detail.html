@@ -46,6 +46,45 @@
     </div>
 </div>
 
+<!-- Project Tasks Section -->
+<div class="container py-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0"><i class="fas fa-tasks me-2"></i>Tasks for this Project</h4>
+                </div>
+                <div class="card-body p-0">
+                    {% if project.tasks.all %}
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Due Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in project.tasks.all %}
+                                <tr>
+                                    <td>{{ task.title }}</td>
+                                    <td><span class="badge bg-info">{{ task.status }}</span></td>
+                                    <td>{{ task.due_date|date:'M d, Y' }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted">No tasks for this project.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="p-3 text-center text-muted">No tasks for this project.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Project Modal (reuse from projects.html) -->
 <div class="modal fade" id="editProjectModal" tabindex="-1">
     <div class="modal-dialog modal-lg">

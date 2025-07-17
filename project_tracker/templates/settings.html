@@ -67,55 +67,92 @@
 <div class="tab-content" id="settingsTabContent">
     <!-- Profile Settings -->
     <div class="tab-pane fade show active" id="profile" role="tabpanel">
-        <div class="row">
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-user me-2"></i>Profile Information</h5>
+                <a href="{% url 'users:profile' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-user-circle me-1"></i>View Profile
+                </a>
+            </div>
+        </div>
+        <!-- Profile Summary -->
+        <div class="row mb-4">
             <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-user me-2"></i>Profile Information</h5>
-                    </div>
+                <div class="card mb-3">
                     <div class="card-body">
-                        <form id="profileForm">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control" name="first_name" value="John">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" name="last_name" value="Doe">
-                                </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-bold">Username</label>
+                                <p class="form-control-plaintext">{{ user.username }}</p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control" name="email" value="john.doe@example.com">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-bold">Email Address</label>
+                                <p class="form-control-plaintext">{{ user.email }}</p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Username</label>
-                                <input type="text" class="form-control" name="username" value="johndoe" readonly>
-                                <small class="text-muted">Username cannot be changed</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-bold">First Name</label>
+                                <p class="form-control-plaintext">{{ user.first_name|default:"Not provided" }}</p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Job Title</label>
-                                <input type="text" class="form-control" name="job_title" value="Project Manager">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-bold">Last Name</label>
+                                <p class="form-control-plaintext">{{ user.last_name|default:"Not provided" }}</p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Bio</label>
-                                <textarea class="form-control" name="bio" rows="3" placeholder="Tell us about yourself...">Experienced project manager with 5+ years in software development.</textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-bold">Account Status</label>
+                                <p class="form-control-plaintext">
+                                    {% if user.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                </p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Time Zone</label>
-                                <select class="form-select" name="timezone">
-                                    <option value="UTC">UTC</option>
-                                    <option value="EST" selected>Eastern Time (EST)</option>
-                                    <option value="PST">Pacific Time (PST)</option>
-                                    <option value="GMT">Greenwich Mean Time (GMT)</option>
-                                </select>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-bold">Staff Status</label>
+                                <p class="form-control-plaintext">
+                                    {% if user.is_staff %}
+                                        <span class="badge bg-warning">Staff Member</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Regular User</span>
+                                    {% endif %}
+                                </p>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Quick Stats</h5>
+                    </div>
+                    <div class="card-body" id="quick-stats">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Total Projects</span>
+                            <span class="badge bg-primary" id="stat-total-projects">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Active Projects</span>
+                            <span class="badge bg-success" id="stat-active-projects">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Completed Projects</span>
+                            <span class="badge bg-info" id="stat-completed-projects">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Total Tasks</span>
+                            <span class="badge bg-warning" id="stat-total-tasks">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Completed Tasks</span>
+                            <span class="badge bg-success" id="stat-completed-tasks">0</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0"><i class="fas fa-image me-2"></i>Profile Picture</h5>
@@ -403,6 +440,9 @@
                         <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Security Settings</h5>
                     </div>
                     <div class="card-body">
+                        <a href="{% url 'users:change_password' %}" class="btn btn-outline-primary mb-3">
+                            <i class="fas fa-key me-1"></i>Go to Change Password Page
+                        </a>
                         <form id="passwordForm">
                             <div class="mb-3">
                                 <label class="form-label">Current Password</label>
@@ -576,19 +616,68 @@
 // Load settings on page load
 document.addEventListener('DOMContentLoaded', function() {
     loadSettings();
+    loadQuickStats();
 });
 
 // Load user settings
 function loadSettings() {
-    // In a real app, you'd fetch settings from the API
-    console.log('Loading settings...');
-    
-    // Simulate loading settings
-    setTimeout(() => {
-        // Profile settings would be loaded from user data
-        // Notification settings would be loaded from user preferences
-        // etc.
-    }, 500);
+    fetch('/users/api/users/settings/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to load settings');
+        return response.json();
+    })
+    .then(settings => {
+        // Project settings
+        document.getElementById('defaultProjectStatus').value = settings.default_project_status;
+        document.getElementById('defaultPriority').value = settings.default_priority;
+        document.getElementById('showCompletedTasks').checked = settings.show_completed_tasks;
+        document.getElementById('enableTemplates').checked = settings.enable_templates;
+        // System settings
+        document.getElementById('theme').value = settings.theme;
+        document.getElementById('language').value = settings.language;
+        document.getElementById('dateFormat').value = settings.date_format;
+        document.getElementById('refreshInterval').value = settings.refresh_interval;
+        document.getElementById('itemsPerPage').value = settings.items_per_page;
+        if (document.getElementById('enableAnimations')) {
+            document.getElementById('enableAnimations').checked = settings.enable_animations;
+        }
+    })
+    .catch(error => {
+        if (typeof showNotification === 'function') {
+            showNotification('Failed to load settings', 'error', 3000);
+        }
+        console.error(error);
+    });
+}
+
+function loadQuickStats() {
+    fetch('/users/api/users/quick-stats/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to load quick stats');
+        return response.json();
+    })
+    .then(stats => {
+        document.getElementById('stat-total-projects').textContent = stats.total_projects;
+        document.getElementById('stat-active-projects').textContent = stats.active_projects;
+        document.getElementById('stat-completed-projects').textContent = stats.completed_projects;
+        document.getElementById('stat-total-tasks').textContent = stats.total_tasks;
+        document.getElementById('stat-completed-tasks').textContent = stats.completed_tasks;
+    })
+    .catch(error => {
+        console.error(error);
+    });
 }
 
 // Save all settings
@@ -597,29 +686,49 @@ function saveAllSettings() {
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
     submitBtn.disabled = true;
-    
+
     // Collect all settings
     const settings = {
-        profile: collectProfileSettings(),
-        notifications: collectNotificationSettings(),
-        projects: collectProjectSettings(),
-        system: collectSystemSettings(),
-        security: collectSecuritySettings()
+        default_project_status: document.getElementById('defaultProjectStatus').value,
+        default_priority: document.getElementById('defaultPriority').value,
+        show_completed_tasks: document.getElementById('showCompletedTasks').checked,
+        enable_templates: document.getElementById('enableTemplates').checked,
+        theme: document.getElementById('theme').value,
+        language: document.getElementById('language').value,
+        date_format: document.getElementById('dateFormat').value,
+        refresh_interval: parseInt(document.getElementById('refreshInterval').value),
+        items_per_page: parseInt(document.getElementById('itemsPerPage').value),
+        enable_animations: document.getElementById('enableAnimations') ? document.getElementById('enableAnimations').checked : true
     };
-    
-    console.log('Saving settings:', settings);
-    
-    // Simulate API call
-    setTimeout(() => {
-        // Show success notification
+
+    fetch('/users/api/users/settings/', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(settings)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to save settings');
+        return response.json();
+    })
+    .then(data => {
         if (typeof showNotification === 'function') {
             showNotification('Settings saved successfully!', 'success', 3000);
         }
-        
-        // Reset button state
+    })
+    .catch(error => {
+        if (typeof showNotification === 'function') {
+            showNotification('Failed to save settings', 'error', 3000);
+        }
+        console.error(error);
+    })
+    .finally(() => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-    }, 1500);
+    });
 }
 
 // Collect profile settings
